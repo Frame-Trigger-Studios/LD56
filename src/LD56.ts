@@ -13,6 +13,9 @@ import {
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
+import citySpr from "./art/city.png";
+import trackTopSpr from "./art/track-top.png";
+import trackBotSpr from "./art/track-bottom.png";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSystem} from "./Bullet.ts";
 import {CarMover, Carriage} from "./Train.ts";
@@ -96,6 +99,9 @@ export class LD56 extends Game
         Log.logLevel = LogLevel.WARN;
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
+        this.addResource("city", new SpriteSheet(citySpr, 320, 320))
+        this.addResource("track_top", new SpriteSheet(trackTopSpr, 320, 320))
+        this.addResource("track_bot", new SpriteSheet(trackBotSpr, 320, 320))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
@@ -115,7 +121,8 @@ export class LD56 extends Game
         // Wait for all resources to be loaded and then start the main scene.
         this.resourceLoader.loadAll().then(
             () => {
-                this.setScene(new TitleScene(this));
+                // this.setScene(new TitleScene(this));
+                this.setScene(new MainScene(this));
             }
         )
 

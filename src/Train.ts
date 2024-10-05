@@ -1,6 +1,7 @@
 import {Component, Entity, Key, MathUtil, RenderCircle, System, Timer} from "lagom-engine";
 import {LD56} from "./LD56.ts";
 import {Bullet} from "./Bullet.ts";
+import {Layers} from "./Layers.ts";
 
 export class Train extends Entity
 {
@@ -15,14 +16,14 @@ export class Train extends Entity
     }
 }
 
-const CENTRE_DIST = 30;
+const CENTRE_DIST = 48;
 
 export class Carriage extends Entity
 {
     constructor(readonly startAngle: number)
     {
         const vec = MathUtil.lengthDirXY(CENTRE_DIST, startAngle);
-        super("carriage", LD56.MID_X + vec.x, LD56.MID_Y + vec.y);
+        super("carriage", LD56.MID_X + vec.x, LD56.MID_Y + vec.y, Layers.TRAIN);
     }
 
     onAdded()
