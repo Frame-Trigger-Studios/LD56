@@ -1,10 +1,11 @@
-import {Component, Entity, LagomType, System} from "lagom-engine";
+import {System} from "lagom-engine";
 
 class EnemyHit extends System<[]>
 {
-    types: LagomType<Component>[];
+    types = [];
 
-    update(delta: number): void {
+    update(delta: number): void
+    {
 
     }
 }
