@@ -1,4 +1,14 @@
-import {CircleCollider, CollisionSystem, Component, Entity, MathUtil, RenderCircle, System, Vector} from "lagom-engine";
+import {
+    AnimatedSprite,
+    CircleCollider,
+    CollisionSystem,
+    Component,
+    Entity,
+    MathUtil,
+    RenderCircle,
+    System,
+    Vector
+} from "lagom-engine";
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 
@@ -50,8 +60,8 @@ export class Mover extends Component
 
 export class SineMover extends Component
 {
-    amplitude = 30;
-    frequency = 0.3;
+    amplitude = 50;
+    frequency = 0.1;
     distance: number;
     angle: number;
     step = 0;
@@ -77,7 +87,7 @@ export class Damage extends Component
     }
 }
 
-export class MoveSineSystem extends System<[SineMover]>
+export class MoveSineSystem extends System<[SineMover, AnimatedSprite]>
 {
     update(delta: number): void
     {

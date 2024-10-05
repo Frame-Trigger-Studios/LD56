@@ -66,7 +66,7 @@ export class Ladybug extends Enemy
         super.onAdded();
 
         this.addComponent(new AnimatedSprite(this.scene.game.getResource("ladybug").textures([[0, 0], [1, 0], [2, 0], [1, 0]]), {
-            animationSpeed: 100,
+            animationSpeed: 50,
             xAnchor: 0.5,
             yAnchor: 0.5,
             rotation: -MathUtil.pointDirection(this.transform.x, this.transform.y, LD56.MID_X, LD56.MID_Y) - MathUtil.degToRad(90)

@@ -1,7 +1,7 @@
-import {Component, Entity, MathUtil, System} from "lagom-engine";
+import {Component, Entity, MathUtil, System, Vector} from "lagom-engine";
 import {LD56} from "../LD56.ts";
-import {Health, Ladybug, SmallBug, Wasp} from "./Enemy.ts";
-import {Mover} from "../Bullet.ts";
+import {Enemy, Health, Ladybug, SmallBug, Wasp} from "./Enemy.ts";
+import {Mover, SineMover} from "../Bullet.ts";
 import {getWave, Wave} from "./WaveManager.ts";
 import {Warning} from "./Warning.ts";
 
@@ -81,24 +81,33 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                 const x = LD56.MID_X + vec.x + xVariance;
                 const y = LD56.MID_Y + vec.y + yVariance;
 
-                let enemy = undefined;
+                let enemy: Enemy;
 
                 const newEnemy: ENEMY_TYPE = enemyOptions[MathUtil.randomRange(0, enemyOptions.length)];
-                if (newEnemy == ENEMY_TYPE.WASP) {
-                    enemy = new Wasp(x, y);
-                    wave.spawnedEnemies[waveSpawning.CurrentCluster].wasps++;
-                } else if (newEnemy == ENEMY_TYPE.LADY_BUG) {
-                    enemy = new Ladybug(x, y);
-                    wave.spawnedEnemies[waveSpawning.CurrentCluster].ladyBugs++;
-                } else if (newEnemy == ENEMY_TYPE.SMALL_BUG) {
-                    enemy = new SmallBug(x, y);
-                    wave.spawnedEnemies[waveSpawning.CurrentCluster].smallBugs++;
+                switch (newEnemy) {
+                    case ENEMY_TYPE.WASP:
+                        enemy = new Wasp(x, y);
+                        wave.spawnedEnemies[waveSpawning.CurrentCluster].wasps++;
+                        break;
+                    case ENEMY_TYPE.LADY_BUG:
+                        enemy = new Ladybug(x, y);
+                        wave.spawnedEnemies[waveSpawning.CurrentCluster].ladyBugs++;
+                        break;
+                    case ENEMY_TYPE.SMALL_BUG:
+                        enemy = new SmallBug(x, y);
+                        wave.spawnedEnemies[waveSpawning.CurrentCluster].smallBugs++;
+                        break;
                 }
 
                 let spawned = this.getScene().addEntity(enemy);
                 spawned.addComponent(new Health(1));
-                const direction = MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
-                spawned.addComponent(new Mover(20, direction * -1));
+                const direction = -MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
+
+                if (newEnemy == ENEMY_TYPE.WASP && MathUtil.randomRange(0, 100) > 80) {
+                    spawned.addComponent(new SineMover(20, new Vector(spawned.transform.x, spawned.transform.y)));
+                } else {
+                    spawned.addComponent(new Mover(20, direction));
+                }
 
                 // console.log("cluster[" + waveSpawning.CurrentCluster + "] = " + wave.spawnedEnemies[waveSpawning.CurrentCluster])
             }
@@ -114,7 +123,7 @@ export class SpawnArea extends Entity {
 
     onAdded() {
         super.onAdded();
-        const wave = this.addComponent(getWave(2));
+        const wave = this.addComponent(getWave(6));
         // console.log(wave.num_clusters)
         this.addComponent(new WaveSpawning());
     }
@@ -123,8 +132,8 @@ export class SpawnArea extends Entity {
 export class WaveSpawning extends Component {
 
     constructor(public spawnDistance: number = 0,
-        public CurrentCluster: number = -1,
-        public spawnDirection: number = 0) {
+                public CurrentCluster: number = -1,
+                public spawnDirection: number = 0) {
         super();
         this.spawnDistance = MathUtil.pointDistance(0, 0, LD56.MID_X, LD56.MID_Y);
         this.nextCluster();
@@ -136,8 +145,7 @@ export class WaveSpawning extends Component {
 
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
         this.getScene().addGUIEntity(new Warning(MathUtil.degToRad(this.spawnDirection)));
     }
