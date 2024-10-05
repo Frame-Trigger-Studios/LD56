@@ -73,9 +73,7 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                 let angleVariance = MathUtil.randomRange(waveSpawning.spawnDirection - 10, waveSpawning.spawnDirection + 10);
                 const vec = MathUtil.lengthDirXY(waveSpawning.spawnDistance, MathUtil.degToRad(angleVariance));
 
-                // let xVariance = 0;
                 let xVariance = randIntBetween(-5, 5);
-                // let yVariance = 0;
                 let yVariance = randIntBetween(-5, 5);
 
                 const x = LD56.MID_X + vec.x + xVariance;
@@ -101,6 +99,7 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
 
                 let spawned = this.getScene().addEntity(enemy);
                 spawned.addComponent(new Health(1));
+
                 const direction = -MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
 
                 if (newEnemy == ENEMY_TYPE.WASP && MathUtil.randomRange(0, 100) > 80) {
