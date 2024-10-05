@@ -5,7 +5,7 @@ import {
     FrameTriggerSystem,
     Game,
     Log,
-    LogLevel, RenderCircle,
+    LogLevel,
     Scene,
     SpriteSheet,
     TextDisp,
@@ -16,6 +16,7 @@ import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSystem} from "./Bullet.ts";
 import {CarMover, Carriage} from "./Train.ts";
+import {City} from "./City.ts";
 
 class TitleScene extends Scene
 {
@@ -63,8 +64,7 @@ class MainScene extends Scene
             }
         }
 
-        this.addEntity(new Entity("city", LD56.MID_X, LD56.MID_Y))
-            .addComponent(new RenderCircle(0, 0, 20));
+        this.addEntity(new City());
         this.addEntity(new Carriage(0));
         this.addSystem(new MoveSystem());
         this.addSystem(new CleanOffScreen());
