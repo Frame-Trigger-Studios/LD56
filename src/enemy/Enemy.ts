@@ -16,7 +16,9 @@ export class Enemy extends Entity
     {
         super.onAdded();
 
-        this.addComponent(new RenderCircle(0, 0, this.colliderRadius));
+        if (LD56.DEBUG) {
+            this.addComponent(new RenderCircle(0, 0, this.colliderRadius));
+        }
 
         // if this is slow pass it through
         this.addComponent(

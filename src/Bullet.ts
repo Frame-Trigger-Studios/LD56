@@ -12,28 +12,26 @@ import {
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 
-interface BulletOpts
-{
+interface BulletOpts {
     speed: number,
     damage: number,
     sizeMulti: number
 }
 
-export class Bullet extends Entity
-{
-    constructor(x: number, y: number, readonly initDir: number, readonly opts: BulletOpts)
-    {
+export class Bullet extends Entity {
+    constructor(x: number, y: number, readonly initDir: number, readonly opts: BulletOpts) {
         super("bullet", x, y);
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.addComponent(new CleanMe());
         this.addComponent(new Damage(this.opts.damage));
         this.addComponent(new Mover(this.opts.speed, this.initDir));
+
         this.addComponent(new RenderCircle(0, 0, this.opts.sizeMulti * 3, 0x0));
+
 
         // if this is slow pass it through
         this.addComponent(
@@ -46,28 +44,24 @@ export class Bullet extends Entity
 }
 
 
-export class Mover extends Component
-{
+export class Mover extends Component {
     vec: Vector
 
-    constructor(readonly speed: number, readonly dir: number)
-    {
+    constructor(readonly speed: number, readonly dir: number) {
         super();
 
         this.vec = MathUtil.lengthDirXY(speed, dir)
     }
 }
 
-export class SineMover extends Component
-{
+export class SineMover extends Component {
     amplitude = 50;
     frequency = 0.1;
     distance: number;
     angle: number;
     step = 0;
 
-    constructor(readonly speed: number, readonly start: Vector)
-    {
+    constructor(readonly speed: number, readonly start: Vector) {
         super();
 
         this.distance = MathUtil.pointDistance(this.start.x, this.start.y, LD56.MID_X, LD56.MID_Y);
@@ -75,23 +69,21 @@ export class SineMover extends Component
     }
 }
 
-export class CleanMe extends Component
-{
+export class CleanMe extends Component {
 }
 
-export class Damage extends Component
-{
-    constructor(readonly damage: number)
-    {
+export class Damage extends Component {
+    constructor(readonly damage: number) {
         super();
     }
 }
 
-export class MoveSineSystem extends System<[SineMover, AnimatedSprite]>
-{
-    update(delta: number): void
-    {
-        this.runOnEntities((entity, component) => {
+export class MoveSineSystem extends System<[SineMover, AnimatedSprite]> {
+    update(delta: number): void {
+        this.runOnEntities((entity, component, sprite) => {
+
+            const lastX = entity.transform.x;
+            const lastY = entity.transform.y;
 
             const x = component.step;
             const y = component.amplitude * Math.sin(component.frequency * x);
@@ -103,16 +95,17 @@ export class MoveSineSystem extends System<[SineMover, AnimatedSprite]>
             entity.transform.position.y = rotatedY;
 
             component.step += delta / 1000 * component.speed;
+
+            const facingDir = MathUtil.pointDirection(lastX, lastY, rotatedX, rotatedY);
+            sprite.applyConfig({rotation: -facingDir + MathUtil.degToRad(270)})
         });
     }
 
-    types = [SineMover];
+    types = [SineMover, AnimatedSprite];
 }
 
-export class MoveSystem extends System<[Mover]>
-{
-    update(delta: number): void
-    {
+export class MoveSystem extends System<[Mover]> {
+    update(delta: number): void {
         this.runOnEntities((entity, component) => {
             entity.transform.position.x += component.vec.x * delta / 1000;
             entity.transform.position.y += component.vec.y * delta / 1000;
@@ -123,10 +116,8 @@ export class MoveSystem extends System<[Mover]>
 
 }
 
-export class CleanOffScreen extends System<[CleanMe]>
-{
-    update(delta: number): void
-    {
+export class CleanOffScreen extends System<[CleanMe]> {
+    update(delta: number): void {
         this.runOnEntities((entity) => {
             if (entity.transform.x > LD56.GAME_WIDTH || entity.transform.x < 0
                 || entity.transform.y > LD56.GAME_HEIGHT || entity.transform.y < 0)
