@@ -21,5 +21,3 @@ export class Health extends Component {
         super();
     }
 }
-
-export class Minion extends Component {}
