@@ -1,6 +1,6 @@
 import {
     ActionOnPress,
-    AudioAtlas,
+    AudioAtlas, CollisionMatrix, DebugCollisionSystem, DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
@@ -13,10 +13,15 @@ import {
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
+import citySpr from "./art/city.png";
+import trackTopSpr from "./art/track-top.png";
+import trackBotSpr from "./art/track-bottom.png";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSystem} from "./Bullet.ts";
 import {CarMover, Carriage} from "./Train.ts";
 import {City} from "./City.ts";
+import {EnemySpawner, SpawnArea} from "./enemy/EnemySpawner.ts";
+import {Layers} from "./Layers.ts";
 
 class TitleScene extends Scene
 {
@@ -45,24 +50,26 @@ class MainScene extends Scene
     {
         super.onAdded();
 
+
+        const collisionMatrix = new CollisionMatrix();
+        collisionMatrix.addCollision(Layers.ENEMY, Layers.TRAIN);
+        collisionMatrix.addCollision(Layers.ENEMY, Layers.BULLET);
+        collisionMatrix.addCollision(Layers.ENEMY, Layers.CITY);
+
+        const collSys = this.addGlobalSystem(new DiscreteCollisionSystem(collisionMatrix));
+        // this.addGlobalSystem(new DebugCollisionSystem(collSys));
+
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
+
+        this.addEntity(new SpawnArea(Layers.BACKGROUND))
+        this.addSystem(new EnemySpawner());
 
         this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
             fontFamily: "pixeloid",
             fill: 0xffffff
         }));
-
-        const tile_size = 4;
-        for (let i = 0; i < LD56.GAME_HEIGHT / tile_size; i++)
-        {
-            for (let j = 0; j < LD56.GAME_HEIGHT / tile_size; j++)
-            {
-                // this.addEntity(new Entity("tile", i * tile_size, j * tile_size))
-                //     .addComponent(new RenderRect(0, 0, tile_size, tile_size));
-            }
-        }
 
         this.addEntity(new City());
         this.addEntity(new Carriage(0));
@@ -96,6 +103,9 @@ export class LD56 extends Game
         Log.logLevel = LogLevel.WARN;
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
+        this.addResource("city", new SpriteSheet(citySpr, 320, 320))
+        this.addResource("track_top", new SpriteSheet(trackTopSpr, 320, 320))
+        this.addResource("track_bot", new SpriteSheet(trackBotSpr, 320, 320))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
@@ -115,7 +125,8 @@ export class LD56 extends Game
         // Wait for all resources to be loaded and then start the main scene.
         this.resourceLoader.loadAll().then(
             () => {
-                this.setScene(new TitleScene(this));
+                // this.setScene(new TitleScene(this));
+                this.setScene(new MainScene(this));
             }
         )
 

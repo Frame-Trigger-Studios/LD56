@@ -1,5 +1,6 @@
-import {Component, Entity, MathUtil, RenderCircle, System, Vector} from "lagom-engine";
+import {CircleCollider, CollisionSystem, Component, Entity, MathUtil, RenderCircle, System, Vector} from "lagom-engine";
 import {LD56} from "./LD56.ts";
+import {Layers} from "./Layers.ts";
 
 export class Bullet extends Entity
 {
@@ -13,8 +14,17 @@ export class Bullet extends Entity
         super.onAdded();
 
         this.addComponent(new CleanMe());
+        this.addComponent(new Damage(1));
         this.addComponent(new Mover(100, this.initDir));
         this.addComponent(new RenderCircle(0, 0, 3, 0x0));
+
+        // if this is slow pass it through
+        this.addComponent(
+            new CircleCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
+                {
+                    layer: Layers.BULLET,
+                    radius: 3
+                }));
     }
 }
 

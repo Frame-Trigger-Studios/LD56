@@ -1,7 +1,9 @@
 export enum Layers
 {
     BACKGROUND,
-    TRACKS,
+    TRACKS_TOP,
+    TRACKS_BOT,
+    CITY,
     ENEMY,
     BULLET,
     TRAIN,
