@@ -8,3 +8,8 @@ export enum Layers
     BULLET,
     TRAIN,
 }
+
+export enum UI_Layers
+{
+    WARNING
+}

@@ -3,6 +3,7 @@ import {LD56} from "../LD56.ts";
 import {Enemy, Health, Ladybug, SmallBug, Wasp} from "./Enemy.ts";
 import {Mover} from "../Bullet.ts";
 import {getWave, Wave} from "./WaveManager.ts";
+import {Warning} from "./Warning.ts";
 
 function randIntBetween(min: number, max: number) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -90,5 +91,11 @@ class WaveSpawning extends Component {
     nextCluster() {
         this.CurrentCluster++;
         this.spawnDirection = randIntBetween(0, 360);
+    }
+
+    onAdded()
+    {
+        super.onAdded();
+        this.getScene().addGUIEntity(new Warning(MathUtil.degToRad(this.spawnDirection)));
     }
 }
