@@ -3,6 +3,7 @@ import {Layers} from "../Layers.ts"
 import {Damage} from "../Bullet.ts";
 import {LD56} from "../LD56.ts";
 import {Wave} from "./WaveManager.ts";
+import {Score} from "../Score";
 
 export class Enemy extends Entity
 {
@@ -36,7 +37,8 @@ export class Enemy extends Entity
                     if (hp.amount <= 0)
                     {
                         caller.parent.destroy();
-
+                        const scoreboard = this.getScene().getEntityWithName("score").getComponent<Score>(Score);
+                        scoreboard?.addAmount(1);
                     }
                 }
                 data.other.parent.destroy();
@@ -51,7 +53,6 @@ export class Enemy extends Entity
         if (wave && wave.length > 0) {
             wave[0].killedEnemies++;
         }
-
     }
 }
 
