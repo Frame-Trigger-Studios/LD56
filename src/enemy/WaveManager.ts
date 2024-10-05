@@ -1,5 +1,5 @@
 import {Component, Entity, LagomType, System, Timer} from "lagom-engine";
-import {c} from "vite/dist/node/types.d-aGj9QkWt";
+import {WaveSpawning} from "./EnemySpawner";
 
 interface Units {
     ladyBugs: number,
@@ -48,6 +48,7 @@ export class Wave extends Component {
     }
 
     waveEnded(): boolean {
+        // console.log(this.killedEnemies + " >= " + this.totalEnemies)
         return this.killedEnemies >= this.totalEnemies;
     }
 
@@ -80,6 +81,8 @@ export class WaveManager extends System<[Wave]> {
                     const newWave = entity.addComponent(getWave(wave.waveNumber + 1));
                     console.log("New wave: " + newWave.waveNumber);
                     wave.destroy();
+
+                    entity.addComponent(new WaveSpawning());
                 });
             }
         });

@@ -47,7 +47,7 @@ export class Enemy extends Entity
         const wave = this.getScene().getEntityWithName("SpawnArea")?.getComponentsOfType<Wave>(Wave);
 
         if (wave?.length > 0) {
-            wave[0].killed_enemies++;
+            wave[0].killedEnemies++;
         }
 
     }
