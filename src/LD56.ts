@@ -15,6 +15,8 @@ import {
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager.ts";
+import {Bullet, MoveSystem} from "./Bullet.ts";
+import {Carriage} from "./Train.ts";
 
 class TitleScene extends Scene
 {
@@ -52,16 +54,20 @@ class MainScene extends Scene
             fill: 0xffffff
         }));
 
-        const tile_size = 16;
+        const tile_size = 4;
         for (let i = 0; i < LD56.GAME_HEIGHT / tile_size; i++)
         {
             for (let j = 0; j < LD56.GAME_HEIGHT / tile_size; j++)
             {
-                this.addEntity(new Entity("tile", i * tile_size, j * tile_size))
-                    .addComponent(new RenderRect(0, 0, tile_size, tile_size));
+                // this.addEntity(new Entity("tile", i * tile_size, j * tile_size))
+                //     .addComponent(new RenderRect(0, 0, tile_size, tile_size));
             }
-
         }
+
+        // this.addEntity(new Bullet(LD56.GAME_WIDTH /2 , LD56.GAME_HEIGHT / 2))
+        this.addEntity(new Carriage("car", LD56.GAME_WIDTH /2 , LD56.GAME_HEIGHT / 2))
+
+        this.addSystem(new MoveSystem());
     }
 }
 

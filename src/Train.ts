@@ -1,5 +1,6 @@
-import {Component, Entity} from "lagom-engine";
+import {Entity, RenderCircle, Timer} from "lagom-engine";
 import {LD56} from "./LD56.ts";
+import {Bullet} from "./Bullet.ts";
 
 export class Train extends Entity
 {
@@ -18,17 +19,17 @@ export class Train extends Entity
 
 }
 
-export class Carriage extends Entity {
+export class Carriage extends Entity
+{
 
     onAdded()
     {
         super.onAdded();
 
-
+        this.addComponent(new RenderCircle(0, 0, 5, 0x00FF00))
+        this.addComponent(new Timer(1000, null, true)).onTrigger.register(caller => {
+            this.scene.addEntity(new Bullet(caller.parent.transform.x, caller.parent.transform.y));
+        });
     }
-
-}
-
-export class Shooter extends Component {
 
 }
