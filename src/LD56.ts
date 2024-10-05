@@ -66,7 +66,10 @@ class MainScene extends Scene {
         collisionMatrix.addCollision(Layers.CITY, Layers.UPGRADE);
 
         const collSys = this.addGlobalSystem(new DiscreteCollisionSystem(collisionMatrix));
-        this.addGlobalSystem(new DebugCollisionSystem(collSys));
+
+        if (LD56.DEBUG) {
+            this.addGlobalSystem(new DebugCollisionSystem(collSys));
+        }
 
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
@@ -76,12 +79,12 @@ class MainScene extends Scene {
         this.addSystem(new EnemySpawner());
         this.addSystem(new WaveManager());
 
-        this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
-            fontFamily: "pixeloid",
-            fill: 0xffffff
-        }));
+        // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
+        //     fontFamily: "pixeloid",
+        //     fill: 0xffffff
+        // }));
 
-        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(45_000, null, true)).onTrigger.register((caller, data) => {
+        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(35_000, null, true)).onTrigger.register((caller, data) => {
             const upgrade = upgradePool.pop();
             if (upgrade === undefined) {
                 caller.parent.destroy();
@@ -101,6 +104,9 @@ class MainScene extends Scene {
 }
 
 export class LD56 extends Game {
+
+    static DEBUG = false;
+
     static GAME_WIDTH = 320;
     static GAME_HEIGHT = 320;
     static MID_X = LD56.GAME_WIDTH / 2;

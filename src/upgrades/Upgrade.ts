@@ -39,7 +39,7 @@ export class BulletSpeed extends Upgrade {
     sprIdx = 3;
 
     apply(gun: Gun) {
-        gun.speed += 20;
+        gun.speed += 30;
     }
 }
 

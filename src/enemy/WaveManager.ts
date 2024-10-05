@@ -1,5 +1,4 @@
 import {Component, Entity, LagomType, System, Timer} from "lagom-engine";
-import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
 interface Units {
     ladyBugs: number,
