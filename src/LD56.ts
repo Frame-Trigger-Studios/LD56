@@ -20,8 +20,6 @@ import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSystem} from "./Bullet.ts";
 import {CarMover, Carriage} from "./Train.ts";
 import {City} from "./City.ts";
-import {Bullet, MoveSystem} from "./Bullet.ts";
-import {Carriage} from "./Train.ts";
 import {EnemySpawner, SpawnArea} from "./enemy/EnemySpawner.ts";
 import {Layers} from "./Layers.ts";
 
