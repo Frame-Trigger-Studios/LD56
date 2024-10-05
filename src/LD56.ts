@@ -20,6 +20,10 @@ import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSystem} from "./Bullet.ts";
 import {CarMover, Carriage} from "./Train.ts";
 import {City} from "./City.ts";
+import {Bullet, MoveSystem} from "./Bullet.ts";
+import {Carriage} from "./Train.ts";
+import {EnemySpawner, SpawnArea} from "./enemy/EnemySpawner.ts";
+import {Layers} from "./Layers.ts";
 
 class TitleScene extends Scene
 {
@@ -51,6 +55,9 @@ class MainScene extends Scene
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
+
+        this.addEntity(new SpawnArea(Layers.BACKGROUND))
+        this.addSystem(new EnemySpawner());
 
         this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
             fontFamily: "pixeloid",
