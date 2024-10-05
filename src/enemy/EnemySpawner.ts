@@ -71,7 +71,7 @@ export class SpawnArea extends Entity {
 
     onAdded() {
         super.onAdded();
-        const wave = this.addComponent(getWave(4));
+        const wave = this.addComponent(getWave(1));
         // console.log(wave.num_clusters)
         this.addComponent(new WaveSpawning());
     }

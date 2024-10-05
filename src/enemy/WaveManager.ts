@@ -1,9 +1,9 @@
-import {Component, LagomType, System} from "lagom-engine";
+import {Component, Entity, LagomType, System, Timer} from "lagom-engine";
 
 const waves = [
-    [1, 1, 40],
-    [2, 1, 60],
-    [3, 1, 80],
+    [1, 1, 10],
+    [2, 1, 20],
+    [3, 1, 40],
     [4, 2, 40],
     [5, 2, 60],
     [6, 2, 80],
@@ -38,10 +38,20 @@ export class Wave extends Component {
 }
 
 export class WaveManager extends System<[Wave]> {
-    types: LagomType<Component>[];
+    types = [Wave];
 
     update(delta: number): void {
+        this.runOnEntities((entity: Entity, wave: Wave) => {
+            if (wave.killed_enemies == wave.totalEnemies && entity.getComponent(Timer) == null) {
 
+                const waveEndTimer = entity.addComponent(new Timer(5 * 1000, {}, false))
+                waveEndTimer.onTrigger.register(() => {
+                    const newWave = entity.addComponent(getWave(wave.waveNumber + 1));
+                    console.log("New wave: " + newWave.waveNumber);
+                    wave.destroy();
+                });
+            }
+        });
     }
 
 }
