@@ -5,8 +5,7 @@ import {
     FrameTriggerSystem,
     Game,
     Log,
-    LogLevel,
-    RenderRect,
+    LogLevel, RenderCircle,
     Scene,
     SpriteSheet,
     TextDisp,
@@ -15,8 +14,8 @@ import {
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager.ts";
-import {Bullet, MoveSystem} from "./Bullet.ts";
-import {Carriage} from "./Train.ts";
+import {CleanOffScreen, MoveSystem} from "./Bullet.ts";
+import {CarMover, Carriage} from "./Train.ts";
 
 class TitleScene extends Scene
 {
@@ -64,10 +63,12 @@ class MainScene extends Scene
             }
         }
 
-        // this.addEntity(new Bullet(LD56.GAME_WIDTH /2 , LD56.GAME_HEIGHT / 2))
-        this.addEntity(new Carriage("car", LD56.GAME_WIDTH /2 , LD56.GAME_HEIGHT / 2))
-
+        this.addEntity(new Entity("city", LD56.MID_X, LD56.MID_Y))
+            .addComponent(new RenderCircle(0, 0, 20));
+        this.addEntity(new Carriage(0));
         this.addSystem(new MoveSystem());
+        this.addSystem(new CleanOffScreen());
+        this.addSystem(new CarMover());
     }
 }
 
@@ -75,6 +76,8 @@ export class LD56 extends Game
 {
     static GAME_WIDTH = 320;
     static GAME_HEIGHT = 320;
+    static MID_X = LD56.GAME_WIDTH / 2;
+    static MID_Y = LD56.GAME_HEIGHT / 2;
 
     static muted = false;
     static musicPlaying = false;
