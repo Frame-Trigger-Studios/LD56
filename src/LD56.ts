@@ -57,7 +57,7 @@ class MainScene extends Scene
         collisionMatrix.addCollision(Layers.ENEMY, Layers.CITY);
 
         const collSys = this.addGlobalSystem(new DiscreteCollisionSystem(collisionMatrix));
-        // this.addGlobalSystem(new DebugCollisionSystem(collSys));
+        this.addGlobalSystem(new DebugCollisionSystem(collSys));
 
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
