@@ -1,6 +1,6 @@
 import {Component, Entity, MathUtil, System} from "lagom-engine";
 import {LD56} from "../LD56.ts";
-import {Enemy, Health} from "./Enemy.ts";
+import {Enemy, Health, Ladybug, SmallBug, Wasp} from "./Enemy.ts";
 import {Mover} from "../Bullet.ts";
 import {getWave, Wave} from "./WaveManager.ts";
 
@@ -41,7 +41,7 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
             }
 
             for (let i = 0; i < 3 && wave.spawned_enemies[waveSpawning.CurrentCluster] < wave.cluster_size; i++) {
-                let angleVariance = randIntBetween(waveSpawning.spawnDirection - 10, waveSpawning.spawnDirection + 10);
+                let angleVariance = MathUtil.randomRange(waveSpawning.spawnDirection - 10, waveSpawning.spawnDirection + 10);
                 const vec = MathUtil.lengthDirXY(waveSpawning.spawnDistance, MathUtil.degToRad(angleVariance));
 
                 // let xVariance = 0;
@@ -49,9 +49,10 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                 // let yVariance = 0;
                 let yVariance = randIntBetween(-5, 5);
 
-                let spawned = this.getScene().addEntity(new Enemy("minion",
-                    LD56.MID_X + vec.x + xVariance,
-                    LD56.MID_Y + vec.y + yVariance))
+                let spawned = this.getScene().addEntity(new SmallBug(LD56.MID_X + vec.x + xVariance,
+                    LD56.MID_Y + vec.y + yVariance));
+                // let spawned = this.getScene().addEntity(new Ladybug( LD56.MID_X + vec.x, LD56.MID_Y + vec.y));
+                // let spawned = this.getScene().addEntity(new Wasp( LD56.MID_X + vec.x, LD56.MID_Y + vec.y));
                 spawned.addComponent(new Health(1));
                 const direction = MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
                 spawned.addComponent(new Mover(20, direction * -1));
