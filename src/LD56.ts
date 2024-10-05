@@ -16,8 +16,10 @@ import muteButtonSpr from "./art/mute_button.png";
 import citySpr from "./art/city.png";
 import cityBgSpr from "./art/city-bg.png";
 import littleBugSpr from "./art/enemies/little-bug.png";
+import ladybugSpr from "./art/enemies/ladybug.png";
 import trackTopSpr from "./art/track-top.png";
 import trackBotSpr from "./art/track-bottom.png";
+import waspSpr from "./art/enemies/wasp.png";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSystem} from "./Bullet.ts";
 import {CarMover, Carriage} from "./Train.ts";
@@ -110,6 +112,8 @@ export class LD56 extends Game
         this.addResource("track_top", new SpriteSheet(trackTopSpr, 320, 320))
         this.addResource("track_bot", new SpriteSheet(trackBotSpr, 320, 320))
         this.addResource("little_bug", new SpriteSheet(littleBugSpr, 4, 5))
+        this.addResource("ladybug", new SpriteSheet(ladybugSpr, 15, 16))
+        this.addResource("wasp", new SpriteSheet(waspSpr, 12, 13))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
