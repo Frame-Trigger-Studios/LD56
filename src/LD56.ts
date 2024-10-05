@@ -1,17 +1,35 @@
-import {ActionOnPress, AudioAtlas, Entity, FrameTriggerSystem, Game, Log, LogLevel, Scene, SpriteSheet, TextDisp, TimerSystem} from 'lagom-engine';
+import {
+    ActionOnPress,
+    AudioAtlas,
+    Entity,
+    FrameTriggerSystem,
+    Game,
+    Log,
+    LogLevel,
+    RenderRect,
+    Scene,
+    SpriteSheet,
+    TextDisp,
+    TimerSystem
+} from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager.ts";
 
-class TitleScene extends Scene {
-    onAdded() {
+class TitleScene extends Scene
+{
+    onAdded()
+    {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "GAME NAME", {fontFamily: "retro", fill: 0xffffff}));
+        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "LD56", {
+            fontFamily: "retro",
+            fill: 0xffffff
+        }));
 
         this.addSystem(new ActionOnPress(() => {
             this.game.setScene(new MainScene(this.game))
@@ -21,22 +39,36 @@ class TitleScene extends Scene {
 
 class MainScene extends Scene
 {
-    onAdded() {
+    onAdded()
+    {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {fontFamily: "pixeloid", fill: 0xffffff}));
+        this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
+            fontFamily: "pixeloid",
+            fill: 0xffffff
+        }));
 
+        const tile_size = 16;
+        for (let i = 0; i < LD56.GAME_HEIGHT / tile_size; i++)
+        {
+            for (let j = 0; j < LD56.GAME_HEIGHT / tile_size; j++)
+            {
+                this.addEntity(new Entity("tile", i * tile_size, j * tile_size))
+                    .addComponent(new RenderRect(0, 0, tile_size, tile_size));
+            }
+
+        }
     }
 }
 
-export class GameTemplate extends Game
+export class LD56 extends Game
 {
-    static GAME_WIDTH = 512;
-    static GAME_HEIGHT = 512;
+    static GAME_WIDTH = 320;
+    static GAME_HEIGHT = 320;
 
     static muted = false;
     static musicPlaying = false;
@@ -45,9 +77,9 @@ export class GameTemplate extends Game
     constructor()
     {
         super({
-            width: GameTemplate.GAME_WIDTH,
-            height: GameTemplate.GAME_HEIGHT,
-            resolution: 1,
+            width: LD56.GAME_WIDTH,
+            height: LD56.GAME_HEIGHT,
+            resolution: 2,
             backgroundColor: 0x200140
         });
 
@@ -60,7 +92,7 @@ export class GameTemplate extends Game
         this.setScene(new Scene(this));
 
         // Import sounds and set their properties
-        // const music = GameTemplate.audioAtlas.load("music", "ADD_ME")
+        // const music = LD56.audioAtlas.load("music", "ADD_ME")
         //     .loop(true)
         //     .volume(0.3);
 
