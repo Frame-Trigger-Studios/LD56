@@ -30,9 +30,8 @@ export class Bullet extends Entity {
         this.addComponent(new Damage(this.opts.damage));
         this.addComponent(new Mover(this.opts.speed, this.initDir));
 
-        if (LD56.DEBUG) {
-            this.addComponent(new RenderCircle(0, 0, this.opts.sizeMulti * 3, 0x0));
-        }
+        this.addComponent(new RenderCircle(0, 0, this.opts.sizeMulti * 3, 0x0));
+
 
         // if this is slow pass it through
         this.addComponent(
