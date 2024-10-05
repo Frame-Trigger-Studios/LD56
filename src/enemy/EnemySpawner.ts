@@ -10,17 +10,13 @@ export class EnemySpawner extends System<[Spawning]> {
         super();
     }
 
-    randIntBetween(min, max) { // min and max included
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
     update(delta: number): void {
         this.elapsed += delta;
 
         if (this.elapsed > 1000) {
             this.elapsed = 0;
             this.runOnEntities((entity: Entity, component: Spawning) => {
-                const angle = this.randIntBetween(0, 360)
+                const angle = MathUtil.randomRange(0, 360)
                 const vec = MathUtil.lengthDirXY(LD56.GAME_WIDTH / 3, MathUtil.degToRad(angle));
                 let spawned = this.getScene().addEntity(new Enemy("minion", LD56.MID_X + vec.x, LD56.MID_Y + vec.y))
                 spawned.addComponent(new Health(1));

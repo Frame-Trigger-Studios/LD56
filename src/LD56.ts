@@ -1,6 +1,6 @@
 import {
     ActionOnPress,
-    AudioAtlas,
+    AudioAtlas, CollisionMatrix, DebugCollisionSystem, DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
@@ -50,6 +50,15 @@ class MainScene extends Scene
     {
         super.onAdded();
 
+
+        const collisionMatrix = new CollisionMatrix();
+        collisionMatrix.addCollision(Layers.ENEMY, Layers.TRAIN);
+        collisionMatrix.addCollision(Layers.ENEMY, Layers.BULLET);
+        collisionMatrix.addCollision(Layers.ENEMY, Layers.CITY);
+
+        const collSys = this.addGlobalSystem(new DiscreteCollisionSystem(collisionMatrix));
+        // this.addGlobalSystem(new DebugCollisionSystem(collSys));
+
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
@@ -61,16 +70,6 @@ class MainScene extends Scene
             fontFamily: "pixeloid",
             fill: 0xffffff
         }));
-
-        const tile_size = 4;
-        for (let i = 0; i < LD56.GAME_HEIGHT / tile_size; i++)
-        {
-            for (let j = 0; j < LD56.GAME_HEIGHT / tile_size; j++)
-            {
-                // this.addEntity(new Entity("tile", i * tile_size, j * tile_size))
-                //     .addComponent(new RenderRect(0, 0, tile_size, tile_size));
-            }
-        }
 
         this.addEntity(new City());
         this.addEntity(new Carriage(0));
