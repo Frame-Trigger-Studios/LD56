@@ -2,7 +2,8 @@ import {CircleCollider, CollisionSystem, Component, Entity, MathUtil, RenderCirc
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 
-interface BulletOpts {
+interface BulletOpts
+{
     speed: number,
     damage: number,
     sizeMulti: number
@@ -47,6 +48,23 @@ export class Mover extends Component
     }
 }
 
+export class SineMover extends Component
+{
+    amplitude = 30;
+    frequency = 0.3;
+    distance: number;
+    angle: number;
+    step = 0;
+
+    constructor(readonly speed: number, readonly start: Vector)
+    {
+        super();
+
+        this.distance = MathUtil.pointDistance(this.start.x, this.start.y, LD56.MID_X, LD56.MID_Y);
+        this.angle = -MathUtil.pointDirection(this.start.x, this.start.y, LD56.MID_X, LD56.MID_Y);
+    }
+}
+
 export class CleanMe extends Component
 {
 }
@@ -57,6 +75,28 @@ export class Damage extends Component
     {
         super();
     }
+}
+
+export class MoveSineSystem extends System<[SineMover]>
+{
+    update(delta: number): void
+    {
+        this.runOnEntities((entity, component) => {
+
+            const x = component.step;
+            const y = component.amplitude * Math.sin(component.frequency * x);
+
+            const rotatedX = x * Math.cos(component.angle) - y * Math.sin(component.angle) + component.start.x;
+            const rotatedY = x * Math.sin(component.angle) + y * Math.cos(component.angle) + component.start.y;
+
+            entity.transform.position.x = rotatedX;
+            entity.transform.position.y = rotatedY;
+
+            component.step += delta / 1000 * component.speed;
+        });
+    }
+
+    types = [SineMover];
 }
 
 export class MoveSystem extends System<[Mover]>

@@ -4,19 +4,6 @@ import {Layers} from "./Layers.ts";
 import {Upgrade} from "./upgrades/Upgrade.ts";
 import {Bullet} from "./Bullet.ts";
 
-export class Train extends Entity
-{
-    constructor()
-    {
-        super("train", LD56.GAME_WIDTH / 2, LD56.GAME_HEIGHT / 2);
-    }
-
-    onAdded()
-    {
-        super.onAdded();
-    }
-}
-
 const CENTRE_DIST = 48;
 
 export class Carriage extends Entity

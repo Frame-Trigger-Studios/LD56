@@ -46,7 +46,7 @@ export class Enemy extends Entity
         super.onRemoved();
         const wave = this.getScene().getEntityWithName("SpawnArea")?.getComponentsOfType<Wave>(Wave);
 
-        if (wave?.length > 0) {
+        if (wave && wave.length > 0) {
             wave[0].killed_enemies++;
         }
 
@@ -117,7 +117,6 @@ export class Wasp extends Enemy
 
 export class Health extends Component
 {
-
     constructor(public amount: number)
     {
         super();
