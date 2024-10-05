@@ -33,23 +33,25 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
 
         this.runOnEntities((entity: Entity, wave: Wave, waveSpawning: WaveSpawning) => {
             if (wave.waveSpawned()) {
-                console.log("wave spawned")
+                // console.log("wave spawned")
+                entity.removeComponent(waveSpawning, true);
                 return;
             }
 
             if (wave.clusterSpawned(waveSpawning.CurrentCluster)) {
                 wave.spawnedClusters++;
                 waveSpawning.nextCluster();
-                console.log("next cluster");
+                this.getScene().addGUIEntity(new Warning(MathUtil.degToRad(waveSpawning.spawnDirection)));
+                // console.log("next cluster");
             }
 
             if (waveSpawning.CurrentCluster == wave.spawnedEnemies.length) {
-                console.log("finished clusters");
+                // console.log("finished clusters");
                 return;
             }
 
             for (let i = 0; i < 3; i++) {
-                console.log("Spawn enemy " + i)
+                // console.log("Spawn enemy " + i)
                 const enemyOptions: ENEMY_TYPE[] = [];
 
                 if (wave.clusters.smallBugs > 0 && wave.clusters.smallBugs > wave.spawnedEnemies[waveSpawning.CurrentCluster].smallBugs) {
@@ -107,7 +109,7 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                     spawned.addComponent(new Mover(20, direction));
                 }
 
-                console.log("cluster[" + waveSpawning.CurrentCluster + "] = " + wave.spawnedEnemies[waveSpawning.CurrentCluster])
+                // console.log("cluster[" + waveSpawning.CurrentCluster + "] = " + wave.spawnedEnemies[waveSpawning.CurrentCluster])
             }
         });
     }
@@ -127,7 +129,7 @@ export class SpawnArea extends Entity {
     }
 }
 
-class WaveSpawning extends Component {
+export class WaveSpawning extends Component {
 
     constructor(public spawnDistance: number = 0,
                 public CurrentCluster: number = -1,
@@ -140,6 +142,7 @@ class WaveSpawning extends Component {
     nextCluster() {
         this.CurrentCluster++;
         this.spawnDirection = randIntBetween(0, 360);
+
     }
 
     onAdded() {
