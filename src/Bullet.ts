@@ -2,9 +2,15 @@ import {CircleCollider, CollisionSystem, Component, Entity, MathUtil, RenderCirc
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 
+interface BulletOpts {
+    speed: number,
+    damage: number,
+    sizeMulti: number
+}
+
 export class Bullet extends Entity
 {
-    constructor(x: number, y: number, readonly initDir: number)
+    constructor(x: number, y: number, readonly initDir: number, readonly opts: BulletOpts)
     {
         super("bullet", x, y);
     }
@@ -14,16 +20,16 @@ export class Bullet extends Entity
         super.onAdded();
 
         this.addComponent(new CleanMe());
-        this.addComponent(new Damage(1));
-        this.addComponent(new Mover(100, this.initDir));
-        this.addComponent(new RenderCircle(0, 0, 3, 0x0));
+        this.addComponent(new Damage(this.opts.damage));
+        this.addComponent(new Mover(this.opts.speed, this.initDir));
+        this.addComponent(new RenderCircle(0, 0, this.opts.sizeMulti * 3, 0x0));
 
         // if this is slow pass it through
         this.addComponent(
             new CircleCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
                 {
                     layer: Layers.BULLET,
-                    radius: 3
+                    radius: this.opts.sizeMulti * 3
                 }));
     }
 }
@@ -72,13 +78,10 @@ export class CleanOffScreen extends System<[CleanMe]>
     update(delta: number): void
     {
         this.runOnEntities((entity) => {
-            const distance = MathUtil.pointDistance(LD56.GAME_WIDTH / 2, LD56.GAME_HEIGHT / 2,
-                entity.transform.x, entity.transform.y);
-
-            if (distance > LD56.GAME_WIDTH)
-            {
+            if (entity.transform.x > LD56.GAME_WIDTH || entity.transform.x < 0
+                || entity.transform.y > LD56.GAME_HEIGHT || entity.transform.y < 0)
                 entity.destroy();
-            }
+
         })
     }
 
