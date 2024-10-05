@@ -1,39 +1,70 @@
 import {Component, Entity, LagomType, System, Timer} from "lagom-engine";
+import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const waves = [
-    [1, 1, 10],
-    [2, 1, 20],
-    [3, 1, 40],
-    [4, 2, 40],
-    [5, 2, 60],
-    [6, 2, 80],
+interface Units {
+    ladyBugs: number,
+    smallBugs: number,
+    wasps: number,
+}
+
+interface WaveData {
+    waveNumber: number,
+    numClusters: number,
+    units: Units
+}
+
+const waves: WaveData[] = [
+    {waveNumber: 1, numClusters: 1, units: {smallBugs: 10, ladyBugs: 0, wasps: 0}},
+    {waveNumber: 2, numClusters: 1, units: {smallBugs: 10, ladyBugs: 5, wasps: 0}},
+    {waveNumber: 3, numClusters: 1, units: {smallBugs: 20, ladyBugs: 10, wasps: 3}},
+    {waveNumber: 4, numClusters: 2, units: {smallBugs: 20, ladyBugs: 0, wasps: 6}},
+    {waveNumber: 5, numClusters: 2, units: {smallBugs: 40, ladyBugs: 20, wasps: 0}},
+    {waveNumber: 6, numClusters: 4, units: {smallBugs: 10, ladyBugs: 20, wasps: 10}},
 ];
 
 export function getWave(number: number): Wave {
     const wave_index = (number >= waves.length) ? waves.length - 1 : number - 1;
     const wave_data = waves[wave_index];
 
-    return new Wave(wave_data[0], wave_data[1], wave_data[2]);
+    return new Wave(wave_data.waveNumber, wave_data.numClusters, wave_data.units);
 }
 
 export class Wave extends Component {
 
     constructor(readonly waveNumber: number,
-                readonly num_clusters: number,
-                readonly cluster_size: number,
+                readonly numClusters: number,
+                readonly clusters: Units,
                 public spawnedClusters: number = 0,
-                public spawned_enemies: number[] = [0, 0],
-                public killed_enemies: number = 0,
+                public spawnedEnemies: Units[] = [],
+                public killedEnemies: number = 0,
                 public totalEnemies: number = 0) {
         super();
-        this.totalEnemies = num_clusters * cluster_size;
+        const enemiesInCluster = clusters.wasps + clusters.ladyBugs + clusters.smallBugs;
+        this.totalEnemies = numClusters * enemiesInCluster;
+        this.spawnedEnemies = [];
+        for (let i = 0; i < numClusters; i++) {
+            this.spawnedEnemies.push({ladyBugs: 0, smallBugs: 0, wasps: 0});
+        }
     }
 
     waveEnded(): boolean {
-        return this.killed_enemies >= this.num_clusters * this.cluster_size;
+        return this.killedEnemies >= this.totalEnemies;
     }
+
     waveSpawned(): boolean {
-        return this.spawned_enemies.reduce((total, num) => total + num, 0) >= this.totalEnemies;
+        const totalSpawnedEnemies = this.spawnedEnemies.reduce((total, cluster) => total + cluster.smallBugs + cluster.ladyBugs + cluster.wasps, 0);
+        return totalSpawnedEnemies >= this.totalEnemies;
+    }
+
+    clusterSpawned(clusterNum: number): boolean {
+        if (clusterNum > this.spawnedEnemies.length) {
+            return true;
+        }
+        const cluster: Units = this.spawnedEnemies[clusterNum];
+
+        return cluster.smallBugs >= this.clusters.smallBugs
+            && cluster.ladyBugs >= this.clusters.ladyBugs
+            && cluster.wasps >= this.clusters.wasps;
     }
 }
 
@@ -42,8 +73,8 @@ export class WaveManager extends System<[Wave]> {
 
     update(delta: number): void {
         this.runOnEntities((entity: Entity, wave: Wave) => {
-            if (wave.killed_enemies == wave.totalEnemies && entity.getComponent(Timer) == null) {
-
+            if (wave.waveEnded() && entity.getComponent(Timer) == null) {
+                console.log("wave ended");
                 const waveEndTimer = entity.addComponent(new Timer(5 * 1000, {}, false))
                 waveEndTimer.onTrigger.register(() => {
                     const newWave = entity.addComponent(getWave(wave.waveNumber + 1));

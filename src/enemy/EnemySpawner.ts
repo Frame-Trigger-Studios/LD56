@@ -9,6 +9,12 @@ function randIntBetween(min: number, max: number) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+enum ENEMY_TYPE {
+    SMALL_BUG,
+    LADY_BUG,
+    WASP
+}
+
 export class EnemySpawner extends System<[Wave, WaveSpawning]> {
     types = [Wave, WaveSpawning]
 
@@ -27,21 +33,41 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
 
         this.runOnEntities((entity: Entity, wave: Wave, waveSpawning: WaveSpawning) => {
             if (wave.waveSpawned()) {
-                // console.log("wave spawned")
+                console.log("wave spawned")
                 return;
             }
 
-            if (wave.spawned_enemies[waveSpawning.CurrentCluster] == wave.cluster_size) {
+            if (wave.clusterSpawned(waveSpawning.CurrentCluster)) {
                 wave.spawnedClusters++;
                 waveSpawning.nextCluster();
-                // console.log("next cluster");
+                console.log("next cluster");
             }
-            if (waveSpawning.CurrentCluster == wave.spawned_enemies.length) {
-                // console.log("finished clusters");
+
+            if (waveSpawning.CurrentCluster == wave.spawnedEnemies.length) {
+                console.log("finished clusters");
                 return;
             }
 
-            for (let i = 0; i < 3 && wave.spawned_enemies[waveSpawning.CurrentCluster] < wave.cluster_size; i++) {
+            for (let i = 0; i < 3; i++) {
+                console.log("Spawn enemy " + i)
+                const enemyOptions: ENEMY_TYPE[] = [];
+
+                if (wave.clusters.smallBugs > 0 && wave.clusters.smallBugs > wave.spawnedEnemies[waveSpawning.CurrentCluster].smallBugs) {
+                    enemyOptions.push(ENEMY_TYPE.SMALL_BUG);
+                }
+
+                if (wave.clusters.ladyBugs > 0 && wave.clusters.ladyBugs > wave.spawnedEnemies[waveSpawning.CurrentCluster].ladyBugs) {
+                    enemyOptions.push(ENEMY_TYPE.LADY_BUG);
+                }
+
+                if (wave.clusters.wasps > 0 && wave.clusters.wasps > wave.spawnedEnemies[waveSpawning.CurrentCluster].wasps) {
+                    enemyOptions.push(ENEMY_TYPE.WASP);
+                }
+
+                if (enemyOptions.length == 0) {
+                    break;
+                }
+
                 let angleVariance = MathUtil.randomRange(waveSpawning.spawnDirection - 10, waveSpawning.spawnDirection + 10);
                 const vec = MathUtil.lengthDirXY(waveSpawning.spawnDistance, MathUtil.degToRad(angleVariance));
 
@@ -50,15 +76,29 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                 // let yVariance = 0;
                 let yVariance = randIntBetween(-5, 5);
 
-                let spawned = this.getScene().addEntity(new SmallBug(LD56.MID_X + vec.x + xVariance,
-                    LD56.MID_Y + vec.y + yVariance));
-                // let spawned = this.getScene().addEntity(new Ladybug( LD56.MID_X + vec.x, LD56.MID_Y + vec.y));
-                // let spawned = this.getScene().addEntity(new Wasp( LD56.MID_X + vec.x, LD56.MID_Y + vec.y));
+                const x = LD56.MID_X + vec.x + xVariance;
+                const y = LD56.MID_Y + vec.y + yVariance;
+
+                let enemy = undefined;
+
+                const newEnemy: ENEMY_TYPE = enemyOptions[MathUtil.randomRange(0, enemyOptions.length)];
+                if (newEnemy == ENEMY_TYPE.WASP) {
+                    enemy = new Wasp(x, y);
+                    wave.spawnedEnemies[waveSpawning.CurrentCluster].wasps++;
+                } else if (newEnemy == ENEMY_TYPE.LADY_BUG) {
+                    enemy = new Ladybug(x, y);
+                    wave.spawnedEnemies[waveSpawning.CurrentCluster].ladyBugs++;
+                } else if (newEnemy == ENEMY_TYPE.SMALL_BUG) {
+                    enemy = new SmallBug(x, y);
+                    wave.spawnedEnemies[waveSpawning.CurrentCluster].smallBugs++;
+                }
+
+                let spawned = this.getScene().addEntity(enemy);
                 spawned.addComponent(new Health(1));
                 const direction = MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
                 spawned.addComponent(new Mover(20, direction * -1));
-                wave.spawned_enemies[waveSpawning.CurrentCluster]++;
-                // console.log("cluster[" + waveSpawning.CurrentCluster + "] = " + wave.spawned_enemies[waveSpawning.CurrentCluster])
+
+                console.log("cluster[" + waveSpawning.CurrentCluster + "] = " + wave.spawnedEnemies[waveSpawning.CurrentCluster])
             }
         });
     }
@@ -72,7 +112,7 @@ export class SpawnArea extends Entity {
 
     onAdded() {
         super.onAdded();
-        const wave = this.addComponent(getWave(1));
+        const wave = this.addComponent(getWave(6));
         // console.log(wave.num_clusters)
         this.addComponent(new WaveSpawning());
     }
