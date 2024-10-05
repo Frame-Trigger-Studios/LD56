@@ -2,6 +2,7 @@ import {AnimatedSprite, CircleCollider, CollisionSystem, Component, Entity, Math
 import {Layers} from "../Layers.ts"
 import {Damage} from "../Bullet.ts";
 import {LD56} from "../LD56.ts";
+import {Wave} from "./WaveManager.ts";
 
 export class Enemy extends Entity
 {
@@ -39,6 +40,16 @@ export class Enemy extends Entity
                 data.other.parent.destroy();
             }
         });
+    }
+
+    onRemoved() {
+        super.onRemoved();
+        const wave = this.getScene().getEntityWithName("SpawnArea")?.getComponentsOfType<Wave>(Wave);
+
+        if (wave?.length > 0) {
+            wave[0].killed_enemies++;
+        }
+
     }
 }
 

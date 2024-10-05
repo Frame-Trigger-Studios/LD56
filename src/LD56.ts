@@ -26,6 +26,7 @@ import {BulletSpawner, CarMover, Carriage} from "./Train.ts";
 import {City} from "./City.ts";
 import {EnemySpawner, SpawnArea} from "./enemy/EnemySpawner.ts";
 import {Layers} from "./Layers.ts";
+import {WaveManager} from "./enemy/WaveManager.ts";
 
 class TitleScene extends Scene
 {
@@ -69,6 +70,7 @@ class MainScene extends Scene
 
         this.addEntity(new SpawnArea(Layers.BACKGROUND))
         this.addSystem(new EnemySpawner());
+        this.addSystem(new WaveManager());
 
         this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
             fontFamily: "pixeloid",
