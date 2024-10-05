@@ -24,6 +24,7 @@ export class City extends Entity
     onAdded()
     {
         super.onAdded();
+        this.addComponent(new Sprite(this.scene.game.getResource("city_bg").textureFromIndex(0), {xAnchor: 0.5, yAnchor: 0.5}));
         this.addComponent(new Sprite(this.scene.game.getResource("city").textureFromIndex(0), {xAnchor: 0.5, yAnchor: 0.5}));
         this.addComponent(new TextDisp(-14, -16, "50", {align: "center"}));
         this.addComponent(new CityHp(50));

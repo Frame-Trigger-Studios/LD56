@@ -49,7 +49,7 @@ export class CarControllable extends Component
 
 export class CarMover extends System<[CarControllable]>
 {
-    ROT_SPEED = 5;
+    ROT_SPEED = 1;
 
     update(delta: number): void
     {

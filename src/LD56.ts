@@ -14,6 +14,8 @@ import {
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import citySpr from "./art/city.png";
+import cityBgSpr from "./art/city-bg.png";
+import littleBugSpr from "./art/enemies/little-bug.png";
 import trackTopSpr from "./art/track-top.png";
 import trackBotSpr from "./art/track-bottom.png";
 import {SoundManager} from "./util/SoundManager.ts";
@@ -95,8 +97,8 @@ export class LD56 extends Game
         super({
             width: LD56.GAME_WIDTH,
             height: LD56.GAME_HEIGHT,
-            resolution: 2,
-            backgroundColor: 0x200140
+            resolution: 2.5,
+            backgroundColor: 0xFFFFFF
         });
 
         // Set the global log level
@@ -104,8 +106,10 @@ export class LD56 extends Game
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("city", new SpriteSheet(citySpr, 320, 320))
+        this.addResource("city_bg", new SpriteSheet(cityBgSpr, 320, 320))
         this.addResource("track_top", new SpriteSheet(trackTopSpr, 320, 320))
         this.addResource("track_bot", new SpriteSheet(trackBotSpr, 320, 320))
+        this.addResource("little_bug", new SpriteSheet(littleBugSpr, 4, 5))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));

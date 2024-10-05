@@ -1,6 +1,7 @@
-import {CircleCollider, CollisionSystem, Component, Entity, RenderRect} from "lagom-engine";
+import {AnimatedSprite, CircleCollider, CollisionSystem, Component, Entity, MathUtil, RenderCircle} from "lagom-engine";
 import {Layers} from "../Layers.ts"
 import {Damage} from "../Bullet.ts";
+import {LD56} from "../LD56.ts";
 
 export class Enemy extends Entity
 {
@@ -13,14 +14,20 @@ export class Enemy extends Entity
     {
         super.onAdded();
 
-        this.addComponent(new RenderRect(0, 0, 5, 5, 0x000000, 0xffffff));
-
+        // this.addComponent(new RenderRect(0, 0, 5, 5, 0x000000, 0xffffff));
+        this.addComponent(new AnimatedSprite(this.scene.game.getResource("little_bug").textureSliceFromRow(0, 0, 1), {
+            animationSpeed: 100,
+            xAnchor: 0.5,
+            yAnchor: 0.5,
+            rotation: -MathUtil.pointDirection(this.transform.x, this.transform.y, LD56.MID_X, LD56.MID_Y) + MathUtil.degToRad(90)
+        }));
+        // this.addComponent(new RenderCircle(0, 0, 4));
         // if this is slow pass it through
         this.addComponent(
             new CircleCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
                 {
                     layer: Layers.ENEMY,
-                    radius: 2
+                    radius: 4
                 })).onTriggerEnter.register((caller, data) => {
             if (data.other.layer == Layers.BULLET)
             {
