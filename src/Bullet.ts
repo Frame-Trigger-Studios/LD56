@@ -54,17 +54,22 @@ export class Mover extends Component {
     }
 }
 
+export class SpiralMover extends Component {
+    angle = 0;
+
+    constructor(readonly speed: number, readonly rotSpeed: number) {
+        super();
+    }
+}
+
 export class SineMover extends Component {
     amplitude = 50;
     frequency = 0.1;
-    distance: number;
     angle: number;
     step = 0;
 
     constructor(readonly speed: number, readonly start: Vector) {
         super();
-
-        this.distance = MathUtil.pointDistance(this.start.x, this.start.y, LD56.MID_X, LD56.MID_Y);
         this.angle = -MathUtil.pointDirection(this.start.x, this.start.y, LD56.MID_X, LD56.MID_Y);
     }
 }
@@ -104,6 +109,29 @@ export class MoveSineSystem extends System<[SineMover, AnimatedSprite]> {
     types = [SineMover, AnimatedSprite];
 }
 
+export class MoveSpiralSystem extends System<[SpiralMover, AnimatedSprite]> {
+    update(delta: number): void {
+        this.runOnEntities((entity, mover, sprite) => {
+
+            const lastX = entity.transform.x;
+            const lastY = entity.transform.y;
+
+            let radius = MathUtil.pointDistance(entity.transform.x, entity.transform.y, LD56.MID_X, LD56.MID_Y) - (delta / 1000 * mover.speed);
+            mover.angle += MathUtil.degToRad(delta / 1000 * mover.rotSpeed);
+            let x = LD56.MID_X + radius * Math.cos(mover.angle);
+            let y = LD56.MID_Y + radius * Math.sin(mover.angle);
+
+            entity.transform.position.x = x;
+            entity.transform.position.y = y;
+
+            const facingDir = MathUtil.pointDirection(lastX, lastY, x, y);
+            sprite.applyConfig({rotation: -facingDir + MathUtil.degToRad(270)})
+        });
+    }
+
+    types = [SpiralMover, AnimatedSprite]
+}
+
 export class MoveSystem extends System<[Mover]> {
     update(delta: number): void {
         this.runOnEntities((entity, component) => {
@@ -122,7 +150,6 @@ export class CleanOffScreen extends System<[CleanMe]> {
             if (entity.transform.x > LD56.GAME_WIDTH || entity.transform.x < 0
                 || entity.transform.y > LD56.GAME_HEIGHT || entity.transform.y < 0)
                 entity.destroy();
-
         })
     }
 

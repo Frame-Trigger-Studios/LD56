@@ -26,7 +26,7 @@ import trackBotSpr from "./art/track-bottom.png";
 import waspSpr from "./art/enemies/wasp.png";
 import upgradesSpr from "./art/upgrades.png";
 import {SoundManager} from "./util/SoundManager.ts";
-import {CleanOffScreen, MoveSineSystem, MoveSystem} from "./Bullet.ts";
+import {CleanOffScreen, MoveSineSystem, MoveSpiralSystem, MoveSystem} from "./Bullet.ts";
 import {BulletSpawner, CarMover, Carriage} from "./Train.ts";
 import {City} from "./City.ts";
 import {EnemySpawner, SpawnArea} from "./enemy/EnemySpawner.ts";
@@ -97,6 +97,7 @@ class MainScene extends Scene {
         this.addEntity(new Carriage(0));
         this.addSystem(new MoveSystem());
         this.addSystem(new MoveSineSystem());
+        this.addSystem(new MoveSpiralSystem());
         this.addSystem(new CleanOffScreen());
         this.addSystem(new CarMover());
         this.addSystem(new BulletSpawner());

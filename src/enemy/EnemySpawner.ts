@@ -1,7 +1,7 @@
 import {Component, Entity, MathUtil, System, Vector} from "lagom-engine";
 import {LD56} from "../LD56.ts";
 import {Enemy, Health, Ladybug, SmallBug, Wasp} from "./Enemy.ts";
-import {Mover, SineMover} from "../Bullet.ts";
+import {Mover, SineMover, SpiralMover} from "../Bullet.ts";
 import {getWave, Wave} from "./WaveManager.ts";
 import {Warning} from "./Warning.ts";
 
@@ -104,6 +104,8 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                 const direction = -MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
 
                 if (newEnemy == ENEMY_TYPE.WASP && MathUtil.randomRange(0, 100) > 80) {
+                    spawned.addComponent(new SpiralMover(20, 100));
+                } else if (newEnemy == ENEMY_TYPE.LADY_BUG && MathUtil.randomRange(0, 100) > 80) {
                     spawned.addComponent(new SineMover(20, new Vector(spawned.transform.x, spawned.transform.y)));
                 } else {
                     spawned.addComponent(new Mover(20, direction));
