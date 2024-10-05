@@ -6,6 +6,7 @@ import {
     Entity,
     MathUtil,
     RenderCircle,
+    Sprite,
     System,
     Vector
 } from "lagom-engine";
@@ -30,7 +31,14 @@ export class Bullet extends Entity {
         this.addComponent(new Damage(this.opts.damage));
         this.addComponent(new Mover(this.opts.speed, this.initDir));
 
-        this.addComponent(new RenderCircle(0, 0, this.opts.sizeMulti * 3, 0x0));
+        if (LD56.DEBUG) {
+            this.addComponent(new RenderCircle(0, 0, this.opts.sizeMulti * 3, 0x0));
+        }
+
+        this.addComponent(new Sprite(this.scene.game.getResource("bullet").textureFromIndex(0), {
+            xAnchor: 0.5,
+            yAnchor: 0.5
+        }));
 
 
         // if this is slow pass it through
@@ -55,7 +63,7 @@ export class Mover extends Component {
 }
 
 export class SpiralMover extends Component {
-    angle = 0;
+    angle = MathUtil.degToRad(MathUtil.randomRange(0, 360));
 
     constructor(readonly speed: number, readonly rotSpeed: number) {
         super();

@@ -2,12 +2,13 @@ export enum Layers
 {
     BACKGROUND,
     TRACKS_TOP,
-    TRACKS_BOT,
     CITY,
+    TRACKS_BOT,
+    TRAIN,
+    CITY_TOP,
     ENEMY,
     UPGRADE,
     BULLET,
-    TRAIN,
 }
 
 export enum UI_Layers

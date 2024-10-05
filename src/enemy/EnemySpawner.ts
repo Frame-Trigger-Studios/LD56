@@ -79,34 +79,34 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                 const x = LD56.MID_X + vec.x + xVariance;
                 const y = LD56.MID_Y + vec.y + yVariance;
 
-                let enemy: Enemy;
+                let spawned: Enemy;
 
                 const newEnemy: ENEMY_TYPE = enemyOptions[MathUtil.randomRange(0, enemyOptions.length)];
                 switch (newEnemy) {
                     case ENEMY_TYPE.WASP:
-                        enemy = new Wasp(x, y);
+                        spawned = this.getScene().addEntity(new Wasp(x, y));
+                        spawned.addComponent(new Health(2));
                         wave.spawnedEnemies[waveSpawning.CurrentCluster].wasps++;
                         break;
                     case ENEMY_TYPE.LADY_BUG:
-                        enemy = new Ladybug(x, y);
+                        spawned = this.getScene().addEntity(new Ladybug(x, y));
+                        spawned.addComponent(new Health(3));
+
                         wave.spawnedEnemies[waveSpawning.CurrentCluster].ladyBugs++;
                         break;
                     case ENEMY_TYPE.SMALL_BUG:
-                        enemy = new SmallBug(x, y);
+                        spawned = this.getScene().addEntity(new SmallBug(x, y));
+                        spawned.addComponent(new Health(1));
                         wave.spawnedEnemies[waveSpawning.CurrentCluster].smallBugs++;
                         break;
                 }
-
-                let spawned = this.getScene().addEntity(enemy);
-                spawned.addComponent(new Health(1));
-
-                const direction = -MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
 
                 if (newEnemy == ENEMY_TYPE.WASP && MathUtil.randomRange(0, 100) > 80) {
                     spawned.addComponent(new SpiralMover(20, 100));
                 } else if (newEnemy == ENEMY_TYPE.LADY_BUG && MathUtil.randomRange(0, 100) > 80) {
                     spawned.addComponent(new SineMover(20, new Vector(spawned.transform.x, spawned.transform.y)));
                 } else {
+                    const direction = -MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
                     spawned.addComponent(new Mover(20, direction));
                 }
 

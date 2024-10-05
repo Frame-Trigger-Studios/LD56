@@ -22,6 +22,12 @@ export class City extends Entity {
         this.addComponent(new CityHp(50));
         this.scene.addSystem(new HpUpdater());
 
+        this.scene.addEntity(new Entity("city_top", LD56.MID_X, LD56.MID_Y, Layers.CITY_TOP))
+            .addComponent(new Sprite(this.scene.game.getResource("city_top").textureFromIndex(0), {
+                xAnchor: 0.5,
+                yAnchor: 0.5
+            }));
+
         this.scene.addEntity(new Entity("track_top", LD56.MID_X, LD56.MID_Y, Layers.TRACKS_TOP))
             .addComponent(new Sprite(this.scene.game.getResource("track_top").textureFromIndex(0), {
                 xAnchor: 0.5,

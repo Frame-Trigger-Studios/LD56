@@ -18,9 +18,11 @@ import {
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import citySpr from "./art/city.png";
+import cityTopSpr from "./art/citytop.png";
 import cityBgSpr from "./art/city-bg.png";
 import littleBugSpr from "./art/enemies/little-bug.png";
 import ladybugSpr from "./art/enemies/ladybug.png";
+import bulletSpr from "./art/bullet.png";
 import trackTopSpr from "./art/track-top.png";
 import trackBotSpr from "./art/track-bottom.png";
 import waspSpr from "./art/enemies/wasp.png";
@@ -132,6 +134,7 @@ export class LD56 extends Game {
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("city", new SpriteSheet(citySpr, 320, 320))
+        this.addResource("city_top", new SpriteSheet(cityTopSpr, 320, 320))
         this.addResource("city_bg", new SpriteSheet(cityBgSpr, 320, 320))
         this.addResource("track_top", new SpriteSheet(trackTopSpr, 320, 320))
         this.addResource("track_bot", new SpriteSheet(trackBotSpr, 320, 320))
@@ -139,6 +142,7 @@ export class LD56 extends Game {
         this.addResource("ladybug", new SpriteSheet(ladybugSpr, 15, 16))
         this.addResource("wasp", new SpriteSheet(waspSpr, 12, 13))
         this.addResource("upgrades", new SpriteSheet(upgradesSpr, 16, 16))
+        this.addResource("bullet", new SpriteSheet(bulletSpr, 6, 6))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));

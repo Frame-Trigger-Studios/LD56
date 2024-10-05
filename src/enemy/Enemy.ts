@@ -33,7 +33,7 @@ export class Enemy extends Entity
                 const hp = caller.parent.getComponent<Health>(Health);
                 if (damage && hp)
                 {
-                    hp.amount = -damage.damage;
+                    hp.amount -= damage.damage;
                     if (hp.amount <= 0)
                     {
                         caller.parent.destroy();
