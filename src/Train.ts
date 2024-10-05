@@ -1,7 +1,8 @@
 import {Component, Entity, Key, MathUtil, RenderCircle, System, Timer} from "lagom-engine";
 import {LD56} from "./LD56.ts";
-import {Bullet} from "./Bullet.ts";
 import {Layers} from "./Layers.ts";
+import {Upgrade} from "./upgrades/Upgrade.ts";
+import {Bullet} from "./Bullet.ts";
 
 export class Train extends Entity
 {
@@ -30,13 +31,58 @@ export class Carriage extends Entity
     {
         super.onAdded();
 
-        this.addComponent(new RenderCircle(0, 0, 5, 0x00FF00))
-        const angle = this.addComponent(new CarControllable(this.startAngle))
-        this.addComponent(new Timer(300, angle, true)).onTrigger.register((caller, data) => {
-            this.scene.addEntity(new Bullet(caller.parent.transform.x, caller.parent.transform.y, data.angleRad));
-        });
+        this.addComponent(new RenderCircle(0, 0, 5, 0x00FF00));
+        this.addComponent(new Gun());
+        this.addComponent(new CarControllable(this.startAngle));
+    }
+}
+
+export class Gun extends Component
+{
+    speed: number = 100;
+    damage: number = 1;
+    sizeMulti: number = 1;
+    reloadTime: number = 300;
+    batchSize: number = 1;
+    batchDelay: number = 100;
+    count: number = 1;
+
+    time: number = 0;
+    shootTime: number = -1;
+
+    constructor(upgrades: Upgrade[] = [])
+    {
+        super();
     }
 
+    shoot(entity: Entity, angle: number)
+    {
+        const angleVar = MathUtil.degToRad(5);
+        let startAngle;
+
+        if (this.count % 2 === 0)
+        {
+            const offset = angleVar / 2.0;
+            startAngle = -offset - ((this.count - 2) / 2.0) * angleVar;
+        } else
+        {
+            startAngle = ((this.count - 1) / 2.0) * angleVar;
+        }
+
+        for (let batch = 0; batch < this.batchSize; batch++)
+        {
+            for (let count = 0; count < this.count; count++)
+            {
+                entity.addComponent(new Timer(this.batchDelay * batch, null, false)).onTrigger.register((caller, data) => {
+                    entity.scene.addEntity(new Bullet(entity.transform.x, entity.transform.y, angle + startAngle + (count * angleVar), {
+                        damage: this.damage,
+                        speed: this.speed,
+                        sizeMulti: this.sizeMulti
+                    }));
+                })
+            }
+        }
+    }
 }
 
 export class CarControllable extends Component
@@ -45,6 +91,25 @@ export class CarControllable extends Component
     {
         super();
     }
+}
+
+export class BulletSpawner extends System<[Gun, CarControllable]>
+{
+    update(delta: number): void
+    {
+        this.runOnEntities((entity, gun, car) => {
+            gun.time += delta;
+            if (gun.time > gun.shootTime)
+            {
+                gun.shoot(entity, car.angleRad);
+                gun.shootTime = gun.reloadTime;
+                gun.time = 0;
+            }
+        })
+    }
+
+    types = [Gun, CarControllable]
+
 }
 
 export class CarMover extends System<[CarControllable]>
