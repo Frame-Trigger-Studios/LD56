@@ -5,6 +5,7 @@ export enum Layers
     TRACKS_BOT,
     CITY,
     ENEMY,
+    UPGRADE,
     BULLET,
     TRAIN,
 }

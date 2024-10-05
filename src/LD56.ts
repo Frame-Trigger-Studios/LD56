@@ -1,6 +1,9 @@
 import {
     ActionOnPress,
-    AudioAtlas, CollisionMatrix, DebugCollisionSystem, DiscreteCollisionSystem,
+    AudioAtlas,
+    CollisionMatrix,
+    DebugCollisionSystem,
+    DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
@@ -9,6 +12,7 @@ import {
     Scene,
     SpriteSheet,
     TextDisp,
+    Timer,
     TimerSystem
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
@@ -20,18 +24,18 @@ import ladybugSpr from "./art/enemies/ladybug.png";
 import trackTopSpr from "./art/track-top.png";
 import trackBotSpr from "./art/track-bottom.png";
 import waspSpr from "./art/enemies/wasp.png";
+import upgradesSpr from "./art/upgrades.png";
 import {SoundManager} from "./util/SoundManager.ts";
-import {CleanOffScreen, MoveSystem} from "./Bullet.ts";
+import {CleanOffScreen, MoveSineSystem, MoveSystem} from "./Bullet.ts";
 import {BulletSpawner, CarMover, Carriage} from "./Train.ts";
 import {City} from "./City.ts";
 import {EnemySpawner, SpawnArea} from "./enemy/EnemySpawner.ts";
 import {Layers} from "./Layers.ts";
 import {WaveManager} from "./enemy/WaveManager.ts";
+import {UpgradeEntity, upgradePool} from "./upgrades/Upgrade.ts";
 
-class TitleScene extends Scene
-{
-    onAdded()
-    {
+class TitleScene extends Scene {
+    onAdded() {
         super.onAdded();
 
         this.addGUIEntity(new SoundManager());
@@ -49,17 +53,17 @@ class TitleScene extends Scene
     }
 }
 
-class MainScene extends Scene
-{
-    onAdded()
-    {
+class MainScene extends Scene {
+    onAdded() {
         super.onAdded();
 
 
         const collisionMatrix = new CollisionMatrix();
-        collisionMatrix.addCollision(Layers.ENEMY, Layers.TRAIN);
+        collisionMatrix.addCollision(Layers.ENEMY, Layers.TRAIN); // what do we do if they hit you?
         collisionMatrix.addCollision(Layers.ENEMY, Layers.BULLET);
         collisionMatrix.addCollision(Layers.ENEMY, Layers.CITY);
+        collisionMatrix.addCollision(Layers.TRAIN, Layers.UPGRADE);
+        collisionMatrix.addCollision(Layers.CITY, Layers.UPGRADE);
 
         const collSys = this.addGlobalSystem(new DiscreteCollisionSystem(collisionMatrix));
         this.addGlobalSystem(new DebugCollisionSystem(collSys));
@@ -77,17 +81,26 @@ class MainScene extends Scene
             fill: 0xffffff
         }));
 
+        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(45_000, null, true)).onTrigger.register((caller, data) => {
+            const upgrade = upgradePool.pop();
+            if (upgrade === undefined) {
+                caller.parent.destroy();
+            } else {
+                this.addEntity(new UpgradeEntity(upgrade));
+            }
+        });
+
         this.addEntity(new City());
         this.addEntity(new Carriage(0));
         this.addSystem(new MoveSystem());
+        this.addSystem(new MoveSineSystem());
         this.addSystem(new CleanOffScreen());
         this.addSystem(new CarMover());
         this.addSystem(new BulletSpawner());
     }
 }
 
-export class LD56 extends Game
-{
+export class LD56 extends Game {
     static GAME_WIDTH = 320;
     static GAME_HEIGHT = 320;
     static MID_X = LD56.GAME_WIDTH / 2;
@@ -97,8 +110,7 @@ export class LD56 extends Game
     static musicPlaying = false;
     static audioAtlas: AudioAtlas = new AudioAtlas();
 
-    constructor()
-    {
+    constructor() {
         super({
             width: LD56.GAME_WIDTH,
             height: LD56.GAME_HEIGHT,
@@ -117,6 +129,7 @@ export class LD56 extends Game
         this.addResource("little_bug", new SpriteSheet(littleBugSpr, 4, 5))
         this.addResource("ladybug", new SpriteSheet(ladybugSpr, 15, 16))
         this.addResource("wasp", new SpriteSheet(waspSpr, 12, 13))
+        this.addResource("upgrades", new SpriteSheet(upgradesSpr, 16, 16))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
