@@ -49,14 +49,14 @@ const shuffle = (array: Upgrade[]): Upgrade[] => {
         .map((a) => a.value);
 };
 
-export const upgradePool: Upgrade[] = shuffle([
-    new TrainSpeed(), new TrainSpeed(), new TrainSpeed(), new TrainSpeed(),
-    new MoreBullets(), new MoreBullets(), new MoreBullets(), new MoreBullets(),
-    new BiggerBullets(), new BiggerBullets(), new BiggerBullets(), new BiggerBullets(),
-    new BulletSpeed(), new BulletSpeed(), new BulletSpeed(), new BulletSpeed()]);
-
 
 export class UpgradeEntity extends Entity {
+
+    static upgradePool: Upgrade[] = shuffle([
+        new TrainSpeed(), new TrainSpeed(), new TrainSpeed(), new TrainSpeed(),
+        new MoreBullets(), new MoreBullets(), new MoreBullets(), new MoreBullets(),
+        new BiggerBullets(), new BiggerBullets(), new BiggerBullets(), new BiggerBullets(),
+        new BulletSpeed(), new BulletSpeed(), new BulletSpeed(), new BulletSpeed()]);
 
     constructor(readonly upgrade: Upgrade) {
         const spawn = MathUtil.lengthDirXY(LD56.GAME_WIDTH * 2, MathUtil.degToRad(MathUtil.randomRange(0, 360)))
@@ -91,7 +91,7 @@ export class UpgradeEntity extends Entity {
                 }
             } else if (data.other.layer == Layers.CITY) {
                 // put it back
-                upgradePool.unshift(this.upgrade);
+                UpgradeEntity.upgradePool.unshift(this.upgrade);
             }
             this.destroy();
         });

@@ -9,7 +9,8 @@ import {
     Game,
     Log,
     LogLevel,
-    Scene, ScreenShaker,
+    Scene,
+    ScreenShaker,
     SpriteSheet,
     TextDisp,
     Timer,
@@ -38,7 +39,7 @@ import {City} from "./City.ts";
 import {EnemySpawner, SpawnArea} from "./enemy/EnemySpawner.ts";
 import {Layers} from "./Layers.ts";
 import {WaveManager} from "./enemy/WaveManager.ts";
-import {UpgradeEntity, upgradePool} from "./upgrades/Upgrade.ts";
+import {UpgradeEntity} from "./upgrades/Upgrade.ts";
 import {ScoreDisplay} from "./Score";
 
 class TitleScene extends Scene {
@@ -91,8 +92,8 @@ class MainScene extends Scene {
         //     fill: 0xffffff
         // }));
 
-        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(20_000, null, true)).onTrigger.register((caller, data) => {
-            const upgrade = upgradePool.pop();
+        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(15_000, null, true)).onTrigger.register((caller, data) => {
+            const upgrade = UpgradeEntity.upgradePool.pop();
             if (upgrade === undefined) {
                 caller.parent.destroy();
             } else {
