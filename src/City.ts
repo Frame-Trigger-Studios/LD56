@@ -21,7 +21,7 @@ export class City extends Entity {
             yAnchor: 0.5
         }));
         this.addComponent(new TextDisp(-14, -16, "50", {align: "center"}));
-        this.addComponent(new CityHp(5));
+        this.addComponent(new CityHp(50));
         this.scene.addSystem(new HpUpdater());
 
         this.scene.addEntity(new Entity("city_top", LD56.MID_X, LD56.MID_Y, Layers.CITY_TOP))

@@ -35,6 +35,7 @@ import cityDamageSfx from "./sound/city_damage.wav";
 import gameOverSfx from "./sound/game_over.wav";
 import hitEnemySfx from "./sound/hit_enemy.wav";
 import powerUpSfx from "./sound/power_up.wav";
+import trainMoveSfx from "./sound/train_move.wav";
 import shootSfx from "./sound/shoot.wav";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSineSystem, MoveSpiralSystem, MoveSystem} from "./Bullet.ts";
@@ -168,6 +169,7 @@ export class LD56 extends Game {
         LD56.audioAtlas.load("hitEnemy", hitEnemySfx).volume(0.3);
         LD56.audioAtlas.load("powerUp", powerUpSfx).volume(0.2);
         LD56.audioAtlas.load("shoot", shootSfx).volume(0.02);
+        LD56.audioAtlas.load("trainMove", trainMoveSfx).volume(0.05);
 
         // Import fonts. See index.html for examples of how to add new ones.
         WebFont.load({

@@ -153,10 +153,12 @@ export class CarMover extends System<[CarControllable]> {
             if (keyboard.isKeyDown(Key.KeyA)) {
                 // Rotate left
                 car.angleRad -= CarMover.ROT_SPEED * delta / 1000;
+                (this.getScene().getEntityWithName("audio") as SoundManager).playSound("trainMove");
             }
             if (keyboard.isKeyDown(Key.KeyD)) {
                 // Rotate right
                 car.angleRad += CarMover.ROT_SPEED * delta / 1000;
+                (this.getScene().getEntityWithName("audio") as SoundManager).playSound("trainMove");
             }
 
             const vec = MathUtil.lengthDirXY(CENTRE_DIST, car.angleRad);
