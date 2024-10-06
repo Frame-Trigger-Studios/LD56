@@ -69,8 +69,10 @@ export class UpgradeEntity extends Entity {
 
         const radius = 8;
 
-        this.addComponent(new Mover(30, -MathUtil.pointDirection(this.transform.x, this.transform.y, LD56.MID_X, LD56.MID_Y)));
-        this.addComponent(new RenderCircle(0, 0, radius));
+        this.addComponent(new Mover(20, -MathUtil.pointDirection(this.transform.x, this.transform.y, LD56.MID_X, LD56.MID_Y)));
+        if (LD56.DEBUG) {
+            this.addComponent(new RenderCircle(0, 0, radius));
+        }
         this.addComponent(new Sprite(this.scene.game.getResource("upgrades").texture(this.upgrade.sprIdx, 0), {
             xAnchor: 0.5,
             yAnchor: 0.5

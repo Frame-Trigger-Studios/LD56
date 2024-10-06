@@ -91,7 +91,7 @@ class MainScene extends Scene {
         //     fill: 0xffffff
         // }));
 
-        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(35_000, null, true)).onTrigger.register((caller, data) => {
+        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(20_000, null, true)).onTrigger.register((caller, data) => {
             const upgrade = upgradePool.pop();
             if (upgrade === undefined) {
                 caller.parent.destroy();
