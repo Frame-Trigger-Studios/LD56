@@ -2,6 +2,7 @@ import {CircleCollider, CollisionSystem, Component, Entity, Sprite, System, Text
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 import {Health} from "./enemy/Enemy.ts";
+import {SoundManager} from "./util/SoundManager";
 
 export class City extends Entity {
     constructor() {
@@ -20,7 +21,7 @@ export class City extends Entity {
             yAnchor: 0.5
         }));
         this.addComponent(new TextDisp(-14, -16, "50", {align: "center"}));
-        this.addComponent(new CityHp(50));
+        this.addComponent(new CityHp(5));
         this.scene.addSystem(new HpUpdater());
 
         this.scene.addEntity(new Entity("city_top", LD56.MID_X, LD56.MID_Y, Layers.CITY_TOP))
@@ -53,7 +54,9 @@ export class City extends Entity {
                     hp.hp -= damage.amount;
                     if (hp.hp <= 0) {
                         caller.parent.destroy();
+                        (this.getScene().getEntityWithName("audio") as SoundManager).playSound("gameOver");
                     }
+                    (this.getScene().getEntityWithName("audio") as SoundManager).playSound("cityDamage");
                 }
                 data.other.parent.destroy();
             }

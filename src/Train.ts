@@ -15,6 +15,7 @@ import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 import {Upgrade} from "./upgrades/Upgrade.ts";
 import {Bullet} from "./Bullet.ts";
+import {SoundManager} from "./util/SoundManager";
 
 const CENTRE_DIST = 48;
 
@@ -134,6 +135,7 @@ export class BulletSpawner extends System<[Gun, CarControllable]> {
                 gun.shoot(entity, car.angleRad);
                 gun.shootTime = gun.reloadTime;
                 gun.time = 0;
+                (entity.getScene().getEntityWithName("audio") as SoundManager).playSound("shoot");
             }
         })
     }

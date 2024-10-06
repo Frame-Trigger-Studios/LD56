@@ -1,4 +1,4 @@
-import {Component, Entity, Observable, RenderRect, System, TextDisp} from "lagom-engine";
+import {Component, Entity, Observable, TextDisp} from "lagom-engine";
 
 export class ScoreDisplay extends Entity {
     constructor(x: number, y: number) {

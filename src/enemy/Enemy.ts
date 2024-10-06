@@ -4,6 +4,7 @@ import {Damage} from "../Bullet.ts";
 import {LD56} from "../LD56.ts";
 import {Wave} from "./WaveManager.ts";
 import {Score} from "../Score";
+import {SoundManager} from "../util/SoundManager";
 
 export class Explosion extends Entity {
     constructor(x: number, y: number, readonly big: boolean) {
@@ -56,6 +57,7 @@ export class Enemy extends Entity {
                         caller.parent.destroy();
                         const scoreboard = this.getScene().getEntityWithName("score").getComponent<Score>(Score);
                         scoreboard?.addAmount(1);
+                        (this.getScene().getEntityWithName("audio") as SoundManager).playSound("hitEnemy");
                     }
                 }
                 this.scene.addEntity(new Explosion(data.other.parent.transform.x, data.other.parent.transform.y, false));

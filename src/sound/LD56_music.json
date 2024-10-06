@@ -4,7 +4,7 @@
 	"scale": "normal :)",
 	"key": "C",
 	"introBars": 0,
-	"loopBars": 52,
+	"loopBars": 49,
 	"beatsPerBar": 8,
 	"ticksPerBeat": 4,
 	"beatsPerMinute": 176,
@@ -450,8 +450,8 @@
 						{
 							"pitches": [
 								24,
-								55,
-								48
+								48,
+								55
 							],
 							"points": [
 								{
@@ -469,7 +469,8 @@
 						{
 							"pitches": [
 								24,
-								45
+								45,
+								52
 							],
 							"points": [
 								{
@@ -3498,9 +3499,6 @@
 				0,
 				0,
 				0,
-				0,
-				0,
-				0,
 				6,
 				1,
 				2,
@@ -3937,9 +3935,6 @@
 				}
 			],
 			"sequence": [
-				0,
-				0,
-				0,
 				0,
 				0,
 				0,
@@ -5294,9 +5289,6 @@
 			],
 			"sequence": [
 				0,
-				0,
-				0,
-				0,
 				1,
 				2,
 				1,
@@ -6187,9 +6179,6 @@
 			"sequence": [
 				1,
 				1,
-				1,
-				1,
-				1,
 				2,
 				1,
 				2,
@@ -6244,7 +6233,7 @@
 			"instruments": [
 				{
 					"type": "drumset",
-					"volume": 0,
+					"volume": 20,
 					"eqFilter": [],
 					"preset": 960,
 					"effects": [
@@ -6996,9 +6985,6 @@
 				}
 			],
 			"sequence": [
-				0,
-				0,
-				0,
 				0,
 				0,
 				1,

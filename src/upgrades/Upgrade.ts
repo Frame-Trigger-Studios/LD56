@@ -3,6 +3,7 @@ import {CircleCollider, CollisionSystem, Entity, MathUtil, RenderCircle, Sprite}
 import {LD56} from "../LD56.ts";
 import {Mover} from "../Bullet.ts";
 import {Layers} from "../Layers.ts";
+import {SoundManager} from "../util/SoundManager";
 
 export abstract class Upgrade {
     abstract apply(gun: Gun): void;
@@ -86,6 +87,7 @@ export class UpgradeEntity extends Entity {
                 const gun = data.other.getEntity().getComponent<Gun>(Gun);
                 if (gun) {
                     this.upgrade.apply(gun);
+                    (this.getScene().getEntityWithName("audio") as SoundManager).playSound("powerUp");
                 }
             } else if (data.other.layer == Layers.CITY) {
                 // put it back

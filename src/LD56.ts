@@ -31,6 +31,11 @@ import explosionSpr from "./art/explosion.png";
 import smallExplosionSpr from "./art/small_explosion.png";
 import carriageSpr from "./art/carriage.png";
 import musicSfx from "./sound/ld56_music.mp3";
+import cityDamageSfx from "./sound/city_damage.wav";
+import gameOverSfx from "./sound/game_over.wav";
+import hitEnemySfx from "./sound/hit_enemy.wav";
+import powerUpSfx from "./sound/power_up.wav";
+import shootSfx from "./sound/shoot.wav";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSineSystem, MoveSpiralSystem, MoveSystem} from "./Bullet.ts";
 import {BulletSpawner, CarMover, Carriage} from "./Train.ts";
@@ -156,7 +161,13 @@ export class LD56 extends Game {
         // Import sounds and set their properties
         const music = LD56.audioAtlas.load("music", musicSfx)
             .loop(true)
-            .volume(0.2);
+            .volume(1);
+
+        LD56.audioAtlas.load("cityDamage", cityDamageSfx);
+        LD56.audioAtlas.load("gameOver", gameOverSfx).volume(0.2);
+        LD56.audioAtlas.load("hitEnemy", hitEnemySfx).volume(0.3);
+        LD56.audioAtlas.load("powerUp", powerUpSfx).volume(0.2);
+        LD56.audioAtlas.load("shoot", shootSfx).volume(0.02);
 
         // Import fonts. See index.html for examples of how to add new ones.
         WebFont.load({
