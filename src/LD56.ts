@@ -48,6 +48,7 @@ import {Layers} from "./Layers.ts";
 import {WaveManager} from "./enemy/WaveManager.ts";
 import {UpgradeEntity} from "./upgrades/Upgrade.ts";
 import {ScoreDisplay} from "./Score";
+import {WaveCounter} from "./WaveCounter";
 
 class TitleScene extends Scene {
     onAdded() {
@@ -87,6 +88,7 @@ class MainScene extends Scene {
 
         this.addGUIEntity(new SoundManager());
         this.addGUIEntity(new ScoreDisplay(20, 20));
+        this.addGUIEntity(new WaveCounter(LD56.GAME_WIDTH - 80, 20));
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 

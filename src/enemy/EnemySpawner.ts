@@ -70,7 +70,7 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                     break;
                 }
 
-                let angleVariance = MathUtil.randomRange(waveSpawning.spawnDirection - 10, waveSpawning.spawnDirection + 10);
+                let angleVariance = MathUtil.randomRange(waveSpawning.spawnDirection - wave.angleVar, waveSpawning.spawnDirection + wave.angleVar);
                 const vec = MathUtil.lengthDirXY(waveSpawning.spawnDistance, MathUtil.degToRad(angleVariance));
 
                 let xVariance = randIntBetween(-5, 5);
@@ -102,12 +102,12 @@ export class EnemySpawner extends System<[Wave, WaveSpawning]> {
                 }
 
                 if (newEnemy == ENEMY_TYPE.WASP && MathUtil.randomRange(0, 100) > 80) {
-                    spawned.addComponent(new SpiralMover(20, 100));
+                    spawned.addComponent(new SpiralMover(wave.waveSpeed, 100));
                 } else if (newEnemy == ENEMY_TYPE.LADY_BUG && MathUtil.randomRange(0, 100) > 80) {
-                    spawned.addComponent(new SineMover(20, new Vector(spawned.transform.x, spawned.transform.y)));
+                    spawned.addComponent(new SineMover(wave.waveSpeed, new Vector(spawned.transform.x, spawned.transform.y)));
                 } else {
                     const direction = -MathUtil.pointDirection(spawned.transform.position.x, spawned.transform.position.y, LD56.MID_X, LD56.MID_Y);
-                    spawned.addComponent(new Mover(20, direction));
+                    spawned.addComponent(new Mover(wave.waveSpeed, direction));
                 }
 
                 // console.log("cluster[" + waveSpawning.CurrentCluster + "] = " + wave.spawnedEnemies[waveSpawning.CurrentCluster])
@@ -124,7 +124,7 @@ export class SpawnArea extends Entity {
 
     onAdded() {
         super.onAdded();
-        const wave = this.addComponent(getWave(1));
+        const wave = this.addComponent(getWave(10));
         // console.log(wave.num_clusters)
         this.addComponent(new WaveSpawning());
     }
