@@ -1,4 +1,4 @@
-import {CircleCollider, CollisionSystem, Component, Entity, Sprite, System, TextDisp} from "lagom-engine";
+import {CircleCollider, CollisionSystem, Component, Entity, ScreenShake, Sprite, System, TextDisp} from "lagom-engine";
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 import {Health} from "./enemy/Enemy.ts";
@@ -41,6 +41,9 @@ export class City extends Entity {
                 yAnchor: 0.5
             }));
 
+        const healthBar = this.scene.addGUIEntity(new Entity("healthbar", 5, 5));
+        healthBar.addComponent(new Sprite(this.scene.game.getResource("healthbar").textureFromIndex(0)));
+
         this.addComponent(
             new CircleCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
                 {
@@ -58,6 +61,7 @@ export class City extends Entity {
                     }
                     (this.getScene().getEntityWithName("audio") as SoundManager).playSound("cityDamage");
                 }
+                this.addComponent(new ScreenShake(0.3, 500));
                 data.other.parent.destroy();
             }
         });

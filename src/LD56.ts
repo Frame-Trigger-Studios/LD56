@@ -10,6 +10,7 @@ import {
     Log,
     LogLevel,
     Scene,
+    ScreenShaker,
     SpriteSheet,
     TextDisp,
     Timer,
@@ -30,6 +31,7 @@ import upgradesSpr from "./art/upgrades.png";
 import explosionSpr from "./art/explosion.png";
 import smallExplosionSpr from "./art/small_explosion.png";
 import carriageSpr from "./art/carriage.png";
+import healthBarSpr from "./art/healthbar.png";
 import musicSfx from "./sound/ld56_music.mp3";
 import cityDamageSfx from "./sound/city_damage.wav";
 import gameOverSfx from "./sound/game_over.wav";
@@ -44,7 +46,7 @@ import {City} from "./City.ts";
 import {EnemySpawner, SpawnArea} from "./enemy/EnemySpawner.ts";
 import {Layers} from "./Layers.ts";
 import {WaveManager} from "./enemy/WaveManager.ts";
-import {UpgradeEntity, upgradePool} from "./upgrades/Upgrade.ts";
+import {UpgradeEntity} from "./upgrades/Upgrade.ts";
 import {ScoreDisplay} from "./Score";
 
 class TitleScene extends Scene {
@@ -97,8 +99,8 @@ class MainScene extends Scene {
         //     fill: 0xffffff
         // }));
 
-        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(35_000, null, true)).onTrigger.register((caller, data) => {
-            const upgrade = upgradePool.pop();
+        this.addEntity(new Entity("powerup_spawner")).addComponent(new Timer(15_000, null, true)).onTrigger.register((caller, data) => {
+            const upgrade = UpgradeEntity.upgradePool.pop();
             if (upgrade === undefined) {
                 caller.parent.destroy();
             } else {
@@ -114,6 +116,8 @@ class MainScene extends Scene {
         this.addSystem(new CleanOffScreen());
         this.addSystem(new CarMover());
         this.addSystem(new BulletSpawner());
+        this.addGlobalSystem(new ScreenShaker(LD56.MID_X, LD56.MID_Y));
+
     }
 }
 
@@ -155,6 +159,7 @@ export class LD56 extends Game {
         this.addResource("carriage", new SpriteSheet(carriageSpr, 55, 40))
         this.addResource("explosion", new SpriteSheet(explosionSpr, 32, 32))
         this.addResource("small_explosion", new SpriteSheet(smallExplosionSpr, 16, 16))
+        this.addResource("healthbar", new SpriteSheet(healthBarSpr, 264, 9))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
