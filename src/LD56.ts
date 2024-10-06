@@ -126,7 +126,7 @@ export class LD56 extends Game {
             width: LD56.GAME_WIDTH,
             height: LD56.GAME_HEIGHT,
             resolution: 2.5,
-            backgroundColor: 0xFFFFFF
+            backgroundColor: 0xFFFF24
         });
 
         // Set the global log level

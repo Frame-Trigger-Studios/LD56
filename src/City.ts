@@ -10,7 +10,8 @@ export class City extends Entity {
 
     onAdded() {
         super.onAdded();
-        this.addComponent(new Sprite(this.scene.game.getResource("city_bg").textureFromIndex(0), {
+        this.scene.addEntity(new Entity("city_bg", LD56.MID_X, LD56.MID_Y, Layers.BACKGROUND))
+            .addComponent(new Sprite(this.scene.game.getResource("city_bg").textureFromIndex(0), {
             xAnchor: 0.5,
             yAnchor: 0.5
         }));
