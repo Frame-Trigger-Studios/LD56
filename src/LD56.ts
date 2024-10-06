@@ -27,6 +27,8 @@ import trackTopSpr from "./art/track-top.png";
 import trackBotSpr from "./art/track-bottom.png";
 import waspSpr from "./art/enemies/wasp.png";
 import upgradesSpr from "./art/upgrades.png";
+import explosionSpr from "./art/explosion.png";
+import smallExplosionSpr from "./art/small_explosion.png";
 import carriageSpr from "./art/carriage.png";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSineSystem, MoveSpiralSystem, MoveSystem} from "./Bullet.ts";
@@ -145,6 +147,8 @@ export class LD56 extends Game {
         this.addResource("upgrades", new SpriteSheet(upgradesSpr, 16, 16))
         this.addResource("bullet", new SpriteSheet(bulletSpr, 6, 6))
         this.addResource("carriage", new SpriteSheet(carriageSpr, 55, 40))
+        this.addResource("explosion", new SpriteSheet(explosionSpr, 32, 32))
+        this.addResource("small_explosion", new SpriteSheet(smallExplosionSpr, 16, 16))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
