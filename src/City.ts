@@ -40,6 +40,9 @@ export class City extends Entity {
                 yAnchor: 0.5
             }));
 
+        const healthBar = this.scene.addGUIEntity(new Entity("healthbar", 5, 5));
+        healthBar.addComponent(new Sprite(this.scene.game.getResource("healthbar").textureFromIndex(0)));
+
         this.addComponent(
             new CircleCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
                 {

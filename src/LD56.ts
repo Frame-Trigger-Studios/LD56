@@ -31,6 +31,7 @@ import upgradesSpr from "./art/upgrades.png";
 import explosionSpr from "./art/explosion.png";
 import smallExplosionSpr from "./art/small_explosion.png";
 import carriageSpr from "./art/carriage.png";
+import healthBarSpr from "./art/healthbar.png";
 import musicSfx from "./sound/ld56_music.mp3";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSineSystem, MoveSpiralSystem, MoveSystem} from "./Bullet.ts";
@@ -152,6 +153,7 @@ export class LD56 extends Game {
         this.addResource("carriage", new SpriteSheet(carriageSpr, 55, 40))
         this.addResource("explosion", new SpriteSheet(explosionSpr, 32, 32))
         this.addResource("small_explosion", new SpriteSheet(smallExplosionSpr, 16, 16))
+        this.addResource("healthbar", new SpriteSheet(healthBarSpr, 264, 9))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
