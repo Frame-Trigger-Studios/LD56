@@ -54,7 +54,7 @@ export class Enemy extends Entity {
                     hp.amount -= damage.damage;
                     if (hp.amount <= 0) {
                         caller.parent.destroy();
-                        const scoreboard = this.getScene().getEntityWithName("score").getComponent<Score>(Score);
+                        const scoreboard = this.getScene().getEntityWithName("score")?.getComponent<Score>(Score);
                         scoreboard?.addAmount(1);
                     }
                 }

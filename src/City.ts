@@ -1,4 +1,4 @@
-import {CircleCollider, CollisionSystem, Component, Entity, Sprite, System, TextDisp} from "lagom-engine";
+import {CircleCollider, CollisionSystem, Component, Entity, ScreenShake, Sprite, System, TextDisp} from "lagom-engine";
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 import {Health} from "./enemy/Enemy.ts";
@@ -55,6 +55,7 @@ export class City extends Entity {
                         caller.parent.destroy();
                     }
                 }
+                this.addComponent(new ScreenShake(0.3, 500));
                 data.other.parent.destroy();
             }
         });

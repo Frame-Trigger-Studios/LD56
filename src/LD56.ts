@@ -9,7 +9,7 @@ import {
     Game,
     Log,
     LogLevel,
-    Scene,
+    Scene, ScreenShaker,
     SpriteSheet,
     TextDisp,
     Timer,
@@ -108,6 +108,8 @@ class MainScene extends Scene {
         this.addSystem(new CleanOffScreen());
         this.addSystem(new CarMover());
         this.addSystem(new BulletSpawner());
+        this.addGlobalSystem(new ScreenShaker(LD56.MID_X, LD56.MID_Y));
+
     }
 }
 
