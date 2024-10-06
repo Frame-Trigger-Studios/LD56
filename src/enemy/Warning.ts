@@ -17,7 +17,7 @@ export class Warning extends Entity
             {
                 fontFamily: "retro",
                 fontSize: 18,
-                fill: 0x0,
+                fill: 0x1f244b,
                 align: "center"
             }));
         this.addComponent(new Timer(4000, null, false)).onTrigger.register(caller => caller.parent.destroy());

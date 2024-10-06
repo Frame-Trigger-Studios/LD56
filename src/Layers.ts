@@ -9,6 +9,7 @@ export enum Layers
     ENEMY,
     UPGRADE,
     BULLET,
+    EXPLOSION,
 }
 
 export enum UI_Layers
