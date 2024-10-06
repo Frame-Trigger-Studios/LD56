@@ -30,6 +30,7 @@ import upgradesSpr from "./art/upgrades.png";
 import explosionSpr from "./art/explosion.png";
 import smallExplosionSpr from "./art/small_explosion.png";
 import carriageSpr from "./art/carriage.png";
+import musicSfx from "./sound/ld56_music.mp3";
 import {SoundManager} from "./util/SoundManager.ts";
 import {CleanOffScreen, MoveSineSystem, MoveSpiralSystem, MoveSystem} from "./Bullet.ts";
 import {BulletSpawner, CarMover, Carriage} from "./Train.ts";
@@ -62,7 +63,6 @@ class TitleScene extends Scene {
 class MainScene extends Scene {
     onAdded() {
         super.onAdded();
-
 
         const collisionMatrix = new CollisionMatrix();
         collisionMatrix.addCollision(Layers.ENEMY, Layers.TRAIN); // what do we do if they hit you?
@@ -156,9 +156,9 @@ export class LD56 extends Game {
         this.setScene(new Scene(this));
 
         // Import sounds and set their properties
-        // const music = LD56.audioAtlas.load("music", "ADD_ME")
-        //     .loop(true)
-        //     .volume(0.3);
+        const music = LD56.audioAtlas.load("music", musicSfx)
+            .loop(true)
+            .volume(0.2);
 
         // Import fonts. See index.html for examples of how to add new ones.
         WebFont.load({
