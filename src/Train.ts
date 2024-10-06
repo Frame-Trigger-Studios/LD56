@@ -1,4 +1,6 @@
 import {
+    AnimatedSpriteController,
+    AnimationEnd,
     CircleCollider,
     CollisionSystem,
     Component,
@@ -26,7 +28,38 @@ export class Carriage extends Entity {
         super.onAdded();
 
         const radius = 5;
-        this.addComponent(new RenderCircle(0, 0, radius, 0x00FF00));
+        if (LD56.DEBUG) {
+            this.addComponent(new RenderCircle(0, 0, radius, 0x00FF00));
+        }
+
+        const sheet = this.scene.game.getResource("carriage");
+
+        this.addComponent(new AnimatedSpriteController(0, [
+            {
+                id: 0,
+                textures: [sheet.textureFromIndex(0)],
+                config: {
+                    xAnchor: 0.5,
+                    yAnchor: 0.5,
+                }
+            },
+            {
+                id: 1,
+                textures: sheet.textures([[1, 0], [2, 0], [3, 0], [4, 0], [0, 0]]),
+                config: {
+                    xAnchor: 0.5,
+                    yAnchor: 0.5,
+                    animationSpeed: 60,
+                    animationEndAction: AnimationEnd.STOP
+                },
+                events: {
+                    4: () => {
+                        this.getComponent<AnimatedSpriteController>(AnimatedSpriteController)?.setAnimation(0, true)
+                    }
+                }
+            }
+        ]))
+
         this.addComponent(new Gun());
 
         this.addComponent(new CarControllable(this.startAngle));
@@ -56,6 +89,9 @@ export class Gun extends Component {
     }
 
     shoot(entity: Entity, angle: number) {
+
+        const spawnOffset = MathUtil.lengthDirXY(12, entity.transform.rotation);
+
         const angleVar = MathUtil.degToRad(5);
         let startAngle;
 
@@ -66,16 +102,20 @@ export class Gun extends Component {
             startAngle = ((this.count - 1) / 2.0) * angleVar;
         }
 
+        const spr = entity.getComponent<AnimatedSpriteController>(AnimatedSpriteController);
+
         for (let batch = 0; batch < this.batchSize; batch++) {
-            for (let count = 0; count < this.count; count++) {
-                entity.addComponent(new Timer(this.batchDelay * batch, null, false)).onTrigger.register((caller, data) => {
-                    entity.scene.addEntity(new Bullet(entity.transform.x, entity.transform.y, angle + startAngle + (count * angleVar), {
+            entity.addComponent(new Timer(this.batchDelay * batch, null, false)).onTrigger.register((caller, data) => {
+                spr?.setAnimation(1, true);
+                for (let count = 0; count < this.count; count++) {
+                    entity.scene.addEntity(new Bullet(entity.transform.x + spawnOffset.x, entity.transform.y + spawnOffset.y, angle + startAngle + (count * angleVar), {
                         damage: this.damage,
                         speed: this.speed,
                         sizeMulti: this.sizeMulti
                     }));
-                })
-            }
+                }
+            })
+
         }
     }
 }
@@ -120,6 +160,8 @@ export class CarMover extends System<[CarControllable]> {
             const vec = MathUtil.lengthDirXY(CENTRE_DIST, car.angleRad);
             entity.transform.position.x = LD56.MID_X + vec.x;
             entity.transform.position.y = LD56.MID_Y + vec.y;
+
+            entity.transform.rotation = car.angleRad;
         });
     }
 
