@@ -1,5 +1,5 @@
 import {CarMover, Gun} from "../Train.ts";
-import {CircleCollider, CollisionSystem, Entity, MathUtil, RenderCircle, Sprite} from "lagom-engine";
+import {CircleCollider, CollisionSystem, Entity, Log, MathUtil, RenderCircle, Sprite} from "lagom-engine";
 import {LD56} from "../LD56.ts";
 import {Mover} from "../Bullet.ts";
 import {Layers} from "../Layers.ts";
@@ -43,7 +43,7 @@ export class HpUpgrade extends Upgrade {
     apply(gun: Gun) {
         const hp = gun.getEntity().getScene().getEntityWithName<City>("city")?.getComponent<CityHp>(CityHp);
         if (hp) {
-            hp.hp = Math.min(hp.hp, hp.hp + 20);
+            hp.hp = Math.min(CityHp.MAX_HP, hp.hp + 20);
         }
     }
 }
@@ -64,9 +64,9 @@ export class UpgradeEntity extends Entity {
         new HpUpgrade(), new HpUpgrade(), new HpUpgrade(), new HpUpgrade()]);
 
     constructor(readonly upgrade: Upgrade) {
-        const spawn = MathUtil.lengthDirXY(LD56.GAME_WIDTH * 2, MathUtil.degToRad(MathUtil.randomRange(0, 360)))
-
-        super("upgrade", Layers.UPGRADE, spawn.x, spawn.y);
+        const spawn = MathUtil.lengthDirXY(LD56.GAME_WIDTH * 0.8, MathUtil.degToRad(MathUtil.randomRange(0, 360)))
+        Log.error("Created upgrade at ", spawn);
+        super("upgrade", LD56.MID_X + spawn.x, LD56.MID_Y + spawn.y, Layers.UPGRADE);
     }
 
     onAdded() {

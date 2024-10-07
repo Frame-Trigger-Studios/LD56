@@ -38,6 +38,8 @@ export class Bullet extends Entity {
         this.addComponent(new Sprite(this.scene.game.getResource("bullet").textureFromIndex(0), {
             xAnchor: 0.5,
             yAnchor: 0.5,
+            xScale: this.opts.sizeMulti,
+            yScale: this.opts.sizeMulti,
             rotation: MathUtil.degToRad(MathUtil.randomRange(0, 360))
         }));
 
