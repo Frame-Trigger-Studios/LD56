@@ -17,7 +17,7 @@ interface WaveData {
 }
 
 const waves: WaveData[] = [
-    {waveNumber: 1, numClusters: 1, waveSpeed: 20, angleVar: 15, units: {smallBugs: 10, ladyBugs: 0, wasps: 0}},
+    {waveNumber: 1, numClusters: 1, waveSpeed: 20, angleVar: 360, units: {smallBugs: 40, ladyBugs: 40, wasps: 20}},
     {waveNumber: 2, numClusters: 1, waveSpeed: 20, angleVar: 20, units: {smallBugs: 10, ladyBugs: 3, wasps: 0}},
     {waveNumber: 3, numClusters: 1, waveSpeed: 20, angleVar: 25, units: {smallBugs: 20, ladyBugs: 5, wasps: 1}},
     {waveNumber: 4, numClusters: 1, waveSpeed: 20, angleVar: 30, units: {smallBugs: 20, ladyBugs: 10, wasps: 3}},

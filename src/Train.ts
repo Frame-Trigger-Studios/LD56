@@ -155,11 +155,11 @@ export class CarMover extends System<[CarControllable]> {
     update(delta: number): void {
         const keyboard = this.scene.game.keyboard
         this.runOnEntities((entity, car) => {
-            if (keyboard.isKeyDown(Key.KeyA)) {
+            if (keyboard.isKeyDown(Key.KeyA, Key.ArrowLeft)) {
                 // Rotate left
                 car.angleRad -= CarMover.ROT_SPEED * delta / 1000;
                 (this.getScene().getEntityWithName("audio") as SoundManager).playSound("trainMove");
-            } else if (keyboard.isKeyDown(Key.KeyD)) {
+            } else if (keyboard.isKeyDown(Key.KeyD, Key.ArrowRight)) {
                 // Rotate right
                 car.angleRad += CarMover.ROT_SPEED * delta / 1000;
                 (this.getScene().getEntityWithName("audio") as SoundManager).playSound("trainMove");
