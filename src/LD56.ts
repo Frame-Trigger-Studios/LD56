@@ -19,6 +19,7 @@ import {
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import citySpr from "./art/city.png";
+import cityDeadSpr from "./art/city_ded.png";
 import cityTopSpr from "./art/citytop.png";
 import cityBgSpr from "./art/city-bg.png";
 import littleBugSpr from "./art/enemies/little-bug.png";
@@ -49,6 +50,7 @@ import {WaveManager} from "./enemy/WaveManager.ts";
 import {UpgradeEntity} from "./upgrades/Upgrade.ts";
 import {ScoreDisplay} from "./Score";
 import {WaveCounter} from "./WaveCounter";
+import {GameOver} from "./GameOver.ts";
 
 class TitleScene extends Scene {
     onAdded() {
@@ -69,7 +71,7 @@ class TitleScene extends Scene {
     }
 }
 
-class MainScene extends Scene {
+export class MainScene extends Scene {
     onAdded() {
         super.onAdded();
 
@@ -119,7 +121,6 @@ class MainScene extends Scene {
         this.addSystem(new CarMover());
         this.addSystem(new BulletSpawner());
         this.addGlobalSystem(new ScreenShaker(LD56.MID_X, LD56.MID_Y));
-
     }
 }
 
@@ -141,7 +142,7 @@ export class LD56 extends Game {
             width: LD56.GAME_WIDTH,
             height: LD56.GAME_HEIGHT,
             resolution: 2.5,
-            backgroundColor: 0xFFFF24
+            backgroundColor: 0xf6e79c
         });
 
         // Set the global log level
@@ -149,6 +150,7 @@ export class LD56 extends Game {
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("city", new SpriteSheet(citySpr, 320, 320))
+        this.addResource("city_dead", new SpriteSheet(cityDeadSpr, 320, 320))
         this.addResource("city_top", new SpriteSheet(cityTopSpr, 320, 320))
         this.addResource("city_bg", new SpriteSheet(cityBgSpr, 320, 320))
         this.addResource("track_top", new SpriteSheet(trackTopSpr, 320, 320))
@@ -195,3 +197,4 @@ export class LD56 extends Game {
 
     }
 }
+

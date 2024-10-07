@@ -3,15 +3,19 @@ import {
     CollisionSystem,
     Component,
     Entity,
+    MathUtil,
     RenderRect,
     ScreenShake,
     Sprite,
-    System
+    System,
+    Timer
 } from "lagom-engine";
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
-import {Health} from "./enemy/Enemy.ts";
+import {Enemy, Explosion, Health} from "./enemy/Enemy.ts";
 import {SoundManager} from "./util/SoundManager";
+import {Gun} from "./Train.ts";
+import {GameOver} from "./GameOver.ts";
 
 export class City extends Entity {
     constructor() {
@@ -50,8 +54,7 @@ export class City extends Entity {
             }));
 
         this.scene.addGUIEntity(new Entity("healthbar", 5, 5));
-        const healthBarBorder = this.scene.addGUIEntity(new Entity("healthbar", 5, 5));
-
+        const healthBarBorder = this.scene.addGUIEntity(new Entity("healthbarborder", 5, 5));
         healthBarBorder.addComponent(new Sprite(this.scene.game.getResource("healthbar").textureFromIndex(0)));
 
         this.addComponent(
@@ -66,8 +69,43 @@ export class City extends Entity {
                 if (damage && hp) {
                     hp.hp -= damage.amount;
                     if (hp.hp <= 0) {
-                        caller.parent.destroy();
+                        // Jankily stop things from happening
+                        this.getScene().getEntityWithName("carriage")?.getComponent(Gun)?.destroy();
+                        this.getScene().getEntityWithName("SpawnArea")?.destroy();
+                        this.getScene().getEntityWithName("powerup_spawner")?.destroy();
+                        this.getScene().getEntityWithName("healthbar")?.destroy();
+                        this.scene.entities.filter(value => value instanceof Enemy).forEach(value => value.destroy());
                         (this.getScene().getEntityWithName("audio") as SoundManager).playSound("gameOver");
+                        caller.parent?.addComponent(new ScreenShake(0.1, 5000));
+                        const exp_timer = caller.parent?.addComponent(new Timer(200, null, true));
+                        exp_timer
+                            .onTrigger.register(() => {
+                            caller.parent.scene.addEntity(new Explosion(LD56.MID_X + MathUtil.randomRange(-50, 50), LD56.MID_Y + MathUtil.randomRange(-50, 50), true, true))
+                            caller.parent.scene.addEntity(new Explosion(LD56.MID_X + MathUtil.randomRange(-50, 50), LD56.MID_Y + MathUtil.randomRange(-50, 50), true, true))
+                            caller.parent.scene.addEntity(new Explosion(LD56.MID_X + MathUtil.randomRange(-50, 50), LD56.MID_Y + MathUtil.randomRange(-50, 50), true, true))
+                            caller.parent.scene.addEntity(new Explosion(LD56.MID_X + MathUtil.randomRange(-50, 50), LD56.MID_Y + MathUtil.randomRange(-50, 50), true, true))
+                            caller.parent.scene.addEntity(new Explosion(LD56.MID_X + MathUtil.randomRange(-50, 50), LD56.MID_Y + MathUtil.randomRange(-50, 50), true))
+                            caller.parent.scene.addEntity(new Explosion(LD56.MID_X + MathUtil.randomRange(-50, 50), LD56.MID_Y + MathUtil.randomRange(-50, 50), true))
+                        })
+                        caller.parent?.addComponent(new Timer(1_000, exp_timer, false)).onTrigger.register((caller1, data1) => {
+
+                            // remove the good city
+                            this.getScene().getEntityWithName("city_top")?.destroy();
+                            this.getComponent(Sprite)?.destroy();
+
+                            caller.parent?.scene.addEntity(new Entity("city_dead", LD56.MID_X, LD56.MID_Y, Layers.CITY_TOP))
+                                .addComponent(new Sprite(this.scene.game.getResource("city_dead").textureFromIndex(0), {
+                                    xAnchor: 0.5,
+                                    yAnchor: 0.5
+                                }));
+
+
+                        });
+                        caller.parent?.addComponent(new Timer(5_000, exp_timer, false)).onTrigger.register((caller1, data1) => {
+                            data1?.destroy()
+                            this.scene.addGUIEntity(new GameOver());
+                        });
+
                     }
                     (this.getScene().getEntityWithName("audio") as SoundManager).playSound("cityDamage");
                 }
