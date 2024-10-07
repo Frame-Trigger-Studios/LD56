@@ -25,12 +25,12 @@ const waves: WaveData[] = [
     {waveNumber: 6, numClusters: 2, waveSpeed: 22, angleVar: 40, units: {smallBugs: 20, ladyBugs: 10, wasps: 7}},
     {waveNumber: 7, numClusters: 2, waveSpeed: 24, angleVar: 45, units: {smallBugs: 30, ladyBugs: 10, wasps: 10}},
     {waveNumber: 8, numClusters: 2, waveSpeed: 26, angleVar: 50, units: {smallBugs: 20, ladyBugs: 20, wasps: 10}},
-    {waveNumber: 9, numClusters: 3, waveSpeed: 28, angleVar: 55, units: {smallBugs: 20, ladyBugs: 20, wasps: 12}},
-    {waveNumber: 10, numClusters: 3, waveSpeed: 30, angleVar: 60, units: {smallBugs: 30, ladyBugs: 20, wasps: 15}},
+    {waveNumber: 9, numClusters: 3, waveSpeed: 30, angleVar: 55, units: {smallBugs: 20, ladyBugs: 20, wasps: 12}},
+    {waveNumber: 10, numClusters: 3, waveSpeed: 32, angleVar: 60, units: {smallBugs: 30, ladyBugs: 25, wasps: 18}},
 ];
 
 const MAX_WAVE_SPEED = 50;
-const MAX_ANGLE_VARIANCE = 70;
+const MAX_ANGLE_VARIANCE = 100;
 
 export function getWave(number: number): Wave {
     let wave_data;
@@ -41,13 +41,13 @@ export function getWave(number: number): Wave {
         let multiplier = number - lastWave.waveNumber;
         wave_data = {
             waveNumber: number,
-            numClusters: Math.max(3, number / 5),
+            numClusters: 3,
             waveSpeed: Math.min(lastWave.waveSpeed + (multiplier * 2), MAX_WAVE_SPEED),
             angleVar: Math.min(lastWave.angleVar + multiplier, MAX_ANGLE_VARIANCE),
             units: {
-                smallBugs: lastWave.units.smallBugs + (multiplier * 10),
-                ladyBugs: lastWave.units.ladyBugs + (multiplier * 5),
-                wasps: lastWave.units.wasps + (multiplier * 3)
+                smallBugs: lastWave.units.smallBugs + (multiplier * 12),
+                ladyBugs: lastWave.units.ladyBugs + (multiplier * 8),
+                wasps: lastWave.units.wasps + (multiplier * 6)
             }
         };
     }
