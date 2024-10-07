@@ -44,10 +44,10 @@ export class GameOver extends Entity {
 }
 
 
-class SpaceToRestart extends Component {
+export class SpaceToRestart extends Component {
 }
 
-class SpaceListener extends System<[SpaceToRestart]> {
+export class SpaceListener extends System<[SpaceToRestart]> {
     update(delta: number): void {
         this.runOnEntities(entity => {
             if (this.scene.game.keyboard.isKeyPressed(Key.Space)) {
