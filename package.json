@@ -1,5 +1,5 @@
 {
-  "name": "ld56",
+  "name": "insecticide-express",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "tsc && vite build && butler push dist quackqack/LD56:html5"
+    "deploy": "tsc && vite build && butler push dist quackqack/insecticide-express:html5"
   },
   "dependencies": {
     "lagom-engine": "^1.2.1",

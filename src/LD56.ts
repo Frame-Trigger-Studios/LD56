@@ -1,17 +1,20 @@
 import {
-    ActionOnPress,
     AudioAtlas,
     CollisionMatrix,
+    Component,
     DebugCollisionSystem,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
+    Key,
     Log,
     LogLevel,
     Scene,
     ScreenShaker,
+    Sprite,
     SpriteSheet,
+    System,
     TextDisp,
     Timer,
     TimerSystem
@@ -50,7 +53,7 @@ import {WaveManager} from "./enemy/WaveManager.ts";
 import {UpgradeEntity} from "./upgrades/Upgrade.ts";
 import {ScoreDisplay} from "./Score";
 import {WaveCounter} from "./WaveCounter";
-import {GameOver} from "./GameOver.ts";
+import {MainMenu} from "./MainMenu.ts";
 
 class TitleScene extends Scene {
     onAdded() {
@@ -60,14 +63,7 @@ class TitleScene extends Scene {
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "LD56", {
-            fontFamily: "retro",
-            fill: 0xffffff
-        }));
-
-        this.addSystem(new ActionOnPress(() => {
-            this.game.setScene(new MainScene(this.game))
-        }));
+        this.addEntity(new MainMenu());
     }
 }
 
@@ -113,6 +109,10 @@ export class MainScene extends Scene {
         });
 
         this.addEntity(new City());
+        this.addGUIEntity(new Entity("healthbar", 5, 5));
+        const healthBarBorder = this.addGUIEntity(new Entity("healthbarborder", 5, 5));
+        healthBarBorder.addComponent(new Sprite(this.game.getResource("healthbar").textureFromIndex(0)));
+
         this.addEntity(new Carriage(0));
         this.addSystem(new MoveSystem());
         this.addSystem(new MoveSineSystem());
@@ -121,7 +121,45 @@ export class MainScene extends Scene {
         this.addSystem(new CarMover());
         this.addSystem(new BulletSpawner());
         this.addGlobalSystem(new ScreenShaker(LD56.MID_X, LD56.MID_Y));
+
+        const e = this.addGUIEntity(new Entity("tutorial", 0, 0));
+        e.addComponent(new Timer(2_000, null, false)).onTrigger.register(caller => {
+            const text = caller.parent.addComponent(new TextDisp(50, LD56.GAME_HEIGHT - 80, "",
+                {
+                    fill: 0x1f244b,
+                    fontFamily: "retro",
+                    fontSize: 18,
+                    align: "center",
+                    dropShadow: true,
+                    dropShadowColor: 0xb6cf8e,
+                    dropShadowDistance: 1
+                }))
+            caller.parent.addComponent(new Timer(150, text, true)).onTrigger.register((caller1, data) => {
+                if (data.pixiObj.text === "") {
+                    data.pixiObj.text = "Use A and D to\nmove your train!";
+                } else {
+                    data.pixiObj.text = "";
+                }
+            });
+        });
+        e.addComponent(new DestroyOnMove());
+        this.addSystem(new DestroySystem());
     }
+}
+
+class DestroyOnMove extends Component {
+}
+
+class DestroySystem extends System<[DestroyOnMove]> {
+    update(delta: number): void {
+        this.runOnEntities((entity, component) => {
+            if (this.scene.game.keyboard.isKeyPressed(Key.KeyA, Key.KeyD, Key.ArrowRight, Key.ArrowLeft)) {
+                entity.destroy();
+            }
+        })
+    }
+
+    types = [DestroyOnMove];
 }
 
 export class LD56 extends Game {
@@ -190,8 +228,8 @@ export class LD56 extends Game {
         // Wait for all resources to be loaded and then start the main scene.
         this.resourceLoader.loadAll().then(
             () => {
-                // this.setScene(new TitleScene(this));
-                this.setScene(new MainScene(this));
+                this.setScene(new TitleScene(this));
+                // this.setScene(new MainScene(this));
             }
         )
 

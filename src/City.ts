@@ -16,6 +16,7 @@ import {Enemy, Explosion, Health} from "./enemy/Enemy.ts";
 import {SoundManager} from "./util/SoundManager";
 import {Gun} from "./Train.ts";
 import {GameOver} from "./GameOver.ts";
+import {UpgradeEntity} from "./upgrades/Upgrade.ts";
 
 export class City extends Entity {
     constructor() {
@@ -53,10 +54,6 @@ export class City extends Entity {
                 yAnchor: 0.5
             }));
 
-        this.scene.addGUIEntity(new Entity("healthbar", 5, 5));
-        const healthBarBorder = this.scene.addGUIEntity(new Entity("healthbarborder", 5, 5));
-        healthBarBorder.addComponent(new Sprite(this.scene.game.getResource("healthbar").textureFromIndex(0)));
-
         this.addComponent(
             new CircleCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
                 {
@@ -74,7 +71,7 @@ export class City extends Entity {
                         this.getScene().getEntityWithName("SpawnArea")?.destroy();
                         this.getScene().getEntityWithName("powerup_spawner")?.destroy();
                         this.getScene().getEntityWithName("healthbar")?.destroy();
-                        this.scene.entities.filter(value => value instanceof Enemy).forEach(value => value.destroy());
+                        this.scene.entities.filter(value => value instanceof Enemy || value instanceof UpgradeEntity).forEach(value => value.destroy());
                         (this.getScene().getEntityWithName("audio") as SoundManager).playSound("gameOver");
                         caller.parent?.addComponent(new ScreenShake(0.1, 5000));
                         const exp_timer = caller.parent?.addComponent(new Timer(200, null, true));
