@@ -17,16 +17,16 @@ interface WaveData {
 }
 
 const waves: WaveData[] = [
-    {waveNumber: 1, numClusters: 1, waveSpeed: 20, angleVar: 10, units: {smallBugs: 10, ladyBugs: 0, wasps: 0}},
-    {waveNumber: 2, numClusters: 1, waveSpeed: 20, angleVar: 10, units: {smallBugs: 10, ladyBugs: 3, wasps: 0}},
-    {waveNumber: 3, numClusters: 1, waveSpeed: 20, angleVar: 10, units: {smallBugs: 20, ladyBugs: 5, wasps: 1}},
-    {waveNumber: 4, numClusters: 1, waveSpeed: 20, angleVar: 10, units: {smallBugs: 20, ladyBugs: 10, wasps: 3}},
-    {waveNumber: 5, numClusters: 2, waveSpeed: 20, angleVar: 10, units: {smallBugs: 20, ladyBugs: 0, wasps: 10}},
-    {waveNumber: 6, numClusters: 2, waveSpeed: 22, angleVar: 10, units: {smallBugs: 20, ladyBugs: 10, wasps: 7}},
-    {waveNumber: 7, numClusters: 2, waveSpeed: 24, angleVar: 10, units: {smallBugs: 30, ladyBugs: 10, wasps: 10}},
-    {waveNumber: 8, numClusters: 2, waveSpeed: 26, angleVar: 12, units: {smallBugs: 20, ladyBugs: 20, wasps: 10}},
-    {waveNumber: 9, numClusters: 3, waveSpeed: 28, angleVar: 12, units: {smallBugs: 20, ladyBugs: 20, wasps: 12}},
-    {waveNumber: 10, numClusters: 3, waveSpeed: 30, angleVar: 12, units: {smallBugs: 30, ladyBugs: 20, wasps: 15}},
+    {waveNumber: 1, numClusters: 1, waveSpeed: 20, angleVar: 15, units: {smallBugs: 10, ladyBugs: 0, wasps: 0}},
+    {waveNumber: 2, numClusters: 1, waveSpeed: 20, angleVar: 20, units: {smallBugs: 10, ladyBugs: 3, wasps: 0}},
+    {waveNumber: 3, numClusters: 1, waveSpeed: 20, angleVar: 25, units: {smallBugs: 20, ladyBugs: 5, wasps: 1}},
+    {waveNumber: 4, numClusters: 1, waveSpeed: 20, angleVar: 30, units: {smallBugs: 20, ladyBugs: 10, wasps: 3}},
+    {waveNumber: 5, numClusters: 2, waveSpeed: 20, angleVar: 35, units: {smallBugs: 20, ladyBugs: 0, wasps: 10}},
+    {waveNumber: 6, numClusters: 2, waveSpeed: 22, angleVar: 40, units: {smallBugs: 20, ladyBugs: 10, wasps: 7}},
+    {waveNumber: 7, numClusters: 2, waveSpeed: 24, angleVar: 45, units: {smallBugs: 30, ladyBugs: 10, wasps: 10}},
+    {waveNumber: 8, numClusters: 2, waveSpeed: 26, angleVar: 50, units: {smallBugs: 20, ladyBugs: 20, wasps: 10}},
+    {waveNumber: 9, numClusters: 3, waveSpeed: 28, angleVar: 55, units: {smallBugs: 20, ladyBugs: 20, wasps: 12}},
+    {waveNumber: 10, numClusters: 3, waveSpeed: 30, angleVar: 60, units: {smallBugs: 30, ladyBugs: 20, wasps: 15}},
 ];
 
 export function getWave(number: number): Wave {
