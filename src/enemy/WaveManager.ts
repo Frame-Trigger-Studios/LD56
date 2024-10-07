@@ -40,7 +40,7 @@ export function getWave(number: number): Wave {
             waveNumber: number,
             numClusters: Math.max(3, number / 5),
             waveSpeed: Math.min(lastWave.waveSpeed + (multiplier * 2), 50),
-            angleVar: Math.min(lastWave.angleVar + multiplier, 30),
+            angleVar: Math.min(lastWave.angleVar + multiplier, 70),
             units: {
                 smallBugs: lastWave.units.smallBugs + (multiplier * 10),
                 ladyBugs: lastWave.units.ladyBugs + (multiplier * 5),
