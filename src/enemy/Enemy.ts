@@ -7,7 +7,7 @@ import {Score} from "../Score";
 import {SoundManager} from "../util/SoundManager";
 
 export class Explosion extends Entity {
-    constructor(x: number, y: number, readonly big: boolean) {
+    constructor(x: number, y: number, readonly big: boolean, readonly bigger: boolean = false) {
         super("exposion", x, y, Layers.EXPLOSION);
     }
 
@@ -23,6 +23,8 @@ export class Explosion extends Entity {
             animationSpeed: 65,
             xAnchor: 0.5,
             yAnchor: 0.5,
+            xScale: this.bigger ? 2 : 1,
+            yScale: this.bigger ? 2 : 1,
             rotation: MathUtil.degToRad(MathUtil.randomRange(0, 360)),
             animationEndEvent: () => this.destroy()
         }))
