@@ -147,6 +147,11 @@ export class BulletSpawner extends System<[Gun, CarControllable]> {
 export class CarMover extends System<[CarControllable]> {
     static ROT_SPEED = 1;
 
+    onAdded() {
+        super.onAdded();
+        CarMover.ROT_SPEED = 1;
+    }
+
     update(delta: number): void {
         const keyboard = this.scene.game.keyboard
         this.runOnEntities((entity, car) => {
