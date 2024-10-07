@@ -29,6 +29,9 @@ const waves: WaveData[] = [
     {waveNumber: 10, numClusters: 3, waveSpeed: 30, angleVar: 60, units: {smallBugs: 30, ladyBugs: 20, wasps: 15}},
 ];
 
+const MAX_WAVE_SPEED = 50;
+const MAX_ANGLE_VARIANCE = 70;
+
 export function getWave(number: number): Wave {
     let wave_data;
     if (number <= waves.length) {
@@ -39,8 +42,8 @@ export function getWave(number: number): Wave {
         wave_data = {
             waveNumber: number,
             numClusters: Math.max(3, number / 5),
-            waveSpeed: Math.min(lastWave.waveSpeed + (multiplier * 2), 50),
-            angleVar: Math.min(lastWave.angleVar + multiplier, 30),
+            waveSpeed: Math.min(lastWave.waveSpeed + (multiplier * 2), MAX_WAVE_SPEED),
+            angleVar: Math.min(lastWave.angleVar + multiplier, MAX_ANGLE_VARIANCE),
             units: {
                 smallBugs: lastWave.units.smallBugs + (multiplier * 10),
                 ladyBugs: lastWave.units.ladyBugs + (multiplier * 5),
