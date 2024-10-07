@@ -87,8 +87,8 @@ class MainScene extends Scene {
         }
 
         this.addGUIEntity(new SoundManager());
-        this.addGUIEntity(new ScoreDisplay(20, 20));
-        this.addGUIEntity(new WaveCounter(LD56.GAME_WIDTH - 80, 20));
+        this.addGUIEntity(new ScoreDisplay(10, 13));
+        this.addGUIEntity(new WaveCounter(LD56.GAME_WIDTH - 105, 13));
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
