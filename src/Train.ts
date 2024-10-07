@@ -154,8 +154,7 @@ export class CarMover extends System<[CarControllable]> {
                 // Rotate left
                 car.angleRad -= CarMover.ROT_SPEED * delta / 1000;
                 (this.getScene().getEntityWithName("audio") as SoundManager).playSound("trainMove");
-            }
-            if (keyboard.isKeyDown(Key.KeyD)) {
+            } else if (keyboard.isKeyDown(Key.KeyD)) {
                 // Rotate right
                 car.angleRad += CarMover.ROT_SPEED * delta / 1000;
                 (this.getScene().getEntityWithName("audio") as SoundManager).playSound("trainMove");

@@ -169,14 +169,14 @@ export class LD56 extends Game {
         // Import sounds and set their properties
         const music = LD56.audioAtlas.load("music", musicSfx)
             .loop(true)
-            .volume(1);
+            .volume(0.5);
 
-        LD56.audioAtlas.load("cityDamage", cityDamageSfx);
+        LD56.audioAtlas.load("cityDamage", cityDamageSfx).volume(0.5);
         LD56.audioAtlas.load("gameOver", gameOverSfx).volume(0.2);
         LD56.audioAtlas.load("hitEnemy", hitEnemySfx).volume(0.3);
         LD56.audioAtlas.load("powerUp", powerUpSfx).volume(0.2);
         LD56.audioAtlas.load("shoot", shootSfx).volume(0.02);
-        LD56.audioAtlas.load("trainMove", trainMoveSfx).volume(0.05);
+        LD56.audioAtlas.load("trainMove", trainMoveSfx).volume(0.08);
 
         // Import fonts. See index.html for examples of how to add new ones.
         WebFont.load({
