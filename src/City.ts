@@ -1,4 +1,13 @@
-import {CircleCollider, CollisionSystem, Component, Entity, ScreenShake, Sprite, System, TextDisp} from "lagom-engine";
+import {
+    CircleCollider,
+    CollisionSystem,
+    Component,
+    Entity,
+    RenderRect,
+    ScreenShake,
+    Sprite,
+    System
+} from "lagom-engine";
 import {LD56} from "./LD56.ts";
 import {Layers} from "./Layers.ts";
 import {Health} from "./enemy/Enemy.ts";
@@ -13,15 +22,14 @@ export class City extends Entity {
         super.onAdded();
         this.scene.addEntity(new Entity("city_bg", LD56.MID_X, LD56.MID_Y, Layers.BACKGROUND))
             .addComponent(new Sprite(this.scene.game.getResource("city_bg").textureFromIndex(0), {
-            xAnchor: 0.5,
-            yAnchor: 0.5
-        }));
+                xAnchor: 0.5,
+                yAnchor: 0.5
+            }));
         this.addComponent(new Sprite(this.scene.game.getResource("city").textureFromIndex(0), {
             xAnchor: 0.5,
             yAnchor: 0.5
         }));
-        this.addComponent(new TextDisp(-14, -16, "50", {align: "center"}));
-        this.addComponent(new CityHp(50));
+        this.addComponent(new CityHp());
         this.scene.addSystem(new HpUpdater());
 
         this.scene.addEntity(new Entity("city_top", LD56.MID_X, LD56.MID_Y, Layers.CITY_TOP))
@@ -41,8 +49,10 @@ export class City extends Entity {
                 yAnchor: 0.5
             }));
 
-        const healthBar = this.scene.addGUIEntity(new Entity("healthbar", 5, 5));
-        healthBar.addComponent(new Sprite(this.scene.game.getResource("healthbar").textureFromIndex(0)));
+        this.scene.addGUIEntity(new Entity("healthbar", 5, 5));
+        const healthBarBorder = this.scene.addGUIEntity(new Entity("healthbar", 5, 5));
+
+        healthBarBorder.addComponent(new Sprite(this.scene.game.getResource("healthbar").textureFromIndex(0)));
 
         this.addComponent(
             new CircleCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
@@ -69,18 +79,32 @@ export class City extends Entity {
 }
 
 export class CityHp extends Component {
-    constructor(public hp: number) {
+    static MAX_HP = 50;
+
+    constructor(public hp = CityHp.MAX_HP, public last = -1) {
         super();
     }
 }
 
-export class HpUpdater extends System<[CityHp, TextDisp]> {
+export class HpUpdater extends System<[CityHp]> {
     update(delta: number): void {
-        this.runOnEntities((entity, cityHp, text) => {
-            text.pixiObj.text = cityHp.hp.toString();
+        this.runOnEntities((entity, cityHp) => {
+            if (cityHp.hp != cityHp.last) {
+                cityHp.last = cityHp.hp;
+                const healthbar = this.getScene().getEntityWithName("healthbar");
+
+                if (healthbar === null) {
+                    return;
+                }
+                healthbar.getComponent(RenderRect)?.destroy();
+                // 222 pixels wide total
+                healthbar.addComponent(new RenderRect(8, 2, (cityHp.hp / CityHp.MAX_HP) * 230, 5, 0x3c6b64, 0x3c6b64
+                ))
+                ;
+            }
         });
     }
 
-    types = [CityHp, TextDisp]
+    types = [CityHp]
 
 }
