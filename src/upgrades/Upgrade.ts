@@ -4,6 +4,7 @@ import {LD56} from "../LD56.ts";
 import {Mover} from "../Bullet.ts";
 import {Layers} from "../Layers.ts";
 import {SoundManager} from "../util/SoundManager";
+import {City, CityHp} from "../City.ts";
 
 export abstract class Upgrade {
     abstract apply(gun: Gun): void;
@@ -36,11 +37,14 @@ export class BiggerBullets extends Upgrade {
     }
 }
 
-export class BulletSpeed extends Upgrade {
+export class HpUpgrade extends Upgrade {
     sprIdx = 3;
 
     apply(gun: Gun) {
-        gun.speed += 30;
+        const hp = gun.getEntity().getScene().getEntityWithName<City>("city")?.getComponent<CityHp>(CityHp);
+        if (hp) {
+            hp.hp = Math.min(hp.hp, hp.hp + 20);
+        }
     }
 }
 
@@ -57,7 +61,7 @@ export class UpgradeEntity extends Entity {
         new TrainSpeed(), new TrainSpeed(), new TrainSpeed(), new TrainSpeed(),
         new MoreBullets(), new MoreBullets(), new MoreBullets(), new MoreBullets(),
         new BiggerBullets(), new BiggerBullets(), new BiggerBullets(), new BiggerBullets(),
-        new BulletSpeed(), new BulletSpeed(), new BulletSpeed(), new BulletSpeed()]);
+        new HpUpgrade(), new HpUpgrade(), new HpUpgrade(), new HpUpgrade()]);
 
     constructor(readonly upgrade: Upgrade) {
         const spawn = MathUtil.lengthDirXY(LD56.GAME_WIDTH * 2, MathUtil.degToRad(MathUtil.randomRange(0, 360)))
